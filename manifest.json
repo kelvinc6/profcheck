@@ -3,7 +3,7 @@
     "name": "My Cool Extension",
     "version": "0.1",
     "background": {
-        "scripts": ["background.js"]
+        "scripts": ["jquery-3.5.1.js","background.js"]
       },
     "content_scripts": [
         {
