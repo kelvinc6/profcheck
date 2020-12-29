@@ -1,8 +1,22 @@
-// Called when the user clicks on the browser action.
-chrome.browserAction.onClicked.addListener(function(tab) {
-    // Send a message to the active tab
-    chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
-      var activeTab = tabs[0];
-      chrome.tabs.sendMessage(activeTab.id, {"message": "clicked_browser_action"});
-    });
-  });
+
+//Test
+chrome.runtime.onMessage.addListener(
+  function (request, sender, sendResponse) {
+    fetch(request.greeting).then(res => res.text()).then(html => {
+      sendResponse({farewell: html})
+    })
+    return true;
+  }
+);
+
+
+// chrome.runtime.onMessage.addListener(
+//   function (request, sender, sendResponse) {
+//     console.log("background working");
+
+//     const page = await fetch(request.url)
+
+
+//     sendResponse({ response: "test" });
+//   }
+// );
