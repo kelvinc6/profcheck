@@ -2,6 +2,7 @@ var $ = require("jquery");
 import { createNameSpan, createTooltip, createTooltipHTML } from "./helpers";
 import { SchoolId } from "./constants";
 import { RMPTeacherData, RMPResponse } from "./d";
+import "../css/tooltip_break.css";
 
 const tableBody: JQuery = $("tbody[role=alert]").children();
 

@@ -4,7 +4,7 @@ import "tippy.js/animations/shift-toward-subtle.css";
 
 import { RMP_TEACHER_BASE_URL } from "./constants";
 import { RMPTeacherData } from "./d";
-var $ = require('jquery')
+var $ = require("jquery");
 
 function createNameSpan(rowIndex: number, nameIndex: number, name: string) {
   return $.parseHTML(
@@ -40,7 +40,7 @@ function createTooltipHTML(teachers: RMPTeacherData[]) {
     );
 
     if (j < teachers.length - 1) {
-      html = html.concat(`<hr id="tooltipBreak">`);
+      html = html.concat(`<hr id="tooltipbreak">`);
     }
   });
   return html;

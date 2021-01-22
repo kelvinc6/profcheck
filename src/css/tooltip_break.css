@@ -1,0 +1,9 @@
+#tooltipbreak {
+  display: block !important;
+  margin-top: 0.5em !important;
+  margin-bottom: 0.5em !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  border-style: inset !important;
+  border-width: 1px !important;
+}

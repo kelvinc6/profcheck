@@ -2,6 +2,7 @@ var $ = require("jquery");
 import { createTooltip, createTooltipHTML } from "./helpers";
 import { SchoolId } from "./constants";
 import { RMPResponse, RMPTeacherData } from "./d";
+import "../css/tooltip_break.css";
 
 const nameTable: JQuery = $("table[class=\\table] > tbody").children();
 
