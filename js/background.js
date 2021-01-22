@@ -1,4 +1,4 @@
-/** 
+/**
  * Gets the current up-to-date typos.json file from GitHub on installation
  * @listens onInstalled
  */
@@ -9,13 +9,13 @@ chrome.runtime.onInstalled.addListener(function () {
   });
 });
 
-/** 
+/**
  * Updates the local typos.json
  * @listens onAlarm
  */
 chrome.alarms.onAlarm.addListener((alarm) => updateTypos());
 
-/** 
+/**
  * Listens for message from content script with instructor name
  * @listens onMessage
  */
@@ -81,7 +81,7 @@ async function getFormattedInstructorInfo(instructorName, isUBCO, typos) {
  * Creates an array of possible first/last names (0 for last name, 1 for first name)
  * @param {string} instructorName
  * @param {number} i
- * 
+ *
  * @example
  * //returns ['ALLEN', 'YANG']
  * createNameArray('ALLEN YANG, JERRY', 0)

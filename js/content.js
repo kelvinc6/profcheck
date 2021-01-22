@@ -27,21 +27,21 @@ nameTable.each((i, elem) => {
    * Whether the first element of a row indicates a TA
    * @type {boolean}
    */
-  const isTA = $(elem).children().first().text().includes('TA:')
+  const isTA = $(elem).children().first().text().includes("TA:");
 
   /**
    * Instructor name with the '(Coordinator)' string removed
    * @type {String}
    */
-  let instructorName = $(elem).find('td > a').text().replace("(Coordinator)", "");
+  let instructorName = $(elem)
+    .find("td > a")
+    .text()
+    .replace("(Coordinator)", "");
 
   //Break out of loop upon reaching a TA, or if no instructor name is present
   if (isTA || !instructorName) {
     return false;
   }
-
-  console.log('There was a name')
-
   //Continue if instructor has been seen before, or if no name present
   if (searchedNames.includes(instructorName) || !instructorName) {
     return;
