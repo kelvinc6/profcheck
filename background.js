@@ -1,20 +1,18 @@
 //Add listener for chrome message
 chrome.runtime.onMessage.addListener(
   function (request, sender, sendResponse) {
-    const firstName = getAndFormatFirstName(request.instructorName)
-    const lastName = getAndFormatLastName(request.instructorName);
-
-    getInfo(firstName, lastName).then(res => sendResponse(res))
+    getInfo(request.instructorName).then(res => sendResponse(res))
     return true;
   }
 );
 
-async function getInfo(firstName, lastName) {
-  const queryURL = `https://solr-aws-elb-production.ratemyprofessors.com/solr/rmp/select/?wt=json&q=schoolid_s%3A1413+AND
-+(teacherlastname_t:${lastName}+AND+teacherfirstname_t:${firstName})&sort=teacherlastname_t+asc&fl=pk_id+teacherfirstname_t+teacherlastname_t+total_number_of_ratings_i+averageratingscore_rf+schoolid_s+rating_class`
+async function getInfo(instructorName) {
 
-  const backupQueryURL = `https://solr-aws-elb-production.ratemyprofessors.com/solr/rmp/select/?wt=json&q=schoolid_s%3A1413+AND
-  +((teacherlastname_t:${lastName}+AND+teacherfirstname_t:${firstName}~)+OR+(teacherlastname_t:${lastName}~+AND+teacherfirstname_t:${firstName}))&sort=teacherlastname_t+asc&fl=pk_id+teacherfirstname_t+teacherlastname_t+total_number_of_ratings_i+averageratingscore_rf+schoolid_s+rating_class`
+  const queryURL = queryConstructor(instructorName)
+
+  console.log(queryURL);
+
+  const backupQueryURL = backupQueryConstructor(instructorName)
 
   let json = await fetch(queryURL).then(res => res.json())
 
@@ -41,27 +39,93 @@ async function getInfo(firstName, lastName) {
         numRatings: professorData.total_number_of_ratings_i,
         link: link
       }
-    } else {
-      return {
-        isSuccessful: false,
-        averageRatingScore: null,
-        numRatings: null,
-        link: null
+    }
+  }
+
+return {
+  isSuccessful: false,
+  averageRatingScore: null,
+  numRatings: null,
+  link: null
+}
+}
+
+
+
+function getAndFormatFirstNameArray(instructorName) {
+  const nameArray = instructorName.split(', ')
+
+  const firstNameArray = nameArray[1].split(' ')
+
+  for (i = 0; i < firstNameArray.length; i++) {
+    // lastNameArray[i] = lastNameArray[i].toLowerCase().charAt(0).toUpperCase() + lastNameArray[i].slice(1)
+    firstNameArray[i] = firstNameArray[i].charAt(0) + firstNameArray[i].toLowerCase().slice(1)
+  }
+  return firstNameArray
+}
+
+function getAndFormatLastNameArray(instructorName) {
+  const nameArray = instructorName.split(', ')
+  const lastNameArray = nameArray[0].split(' ')
+
+  for (i = 0; i < lastNameArray.length; i++) {
+    // lastNameArray[i] = lastNameArray[i].toLowerCase().charAt(0).toUpperCase() + lastNameArray[i].slice(1)
+    lastNameArray[i] = lastNameArray[i].charAt(0) + lastNameArray[i].toLowerCase().slice(1)
+  }
+
+  return lastNameArray
+}
+
+function queryConstructor(instructorName) {
+  const firstNameArray = getAndFormatFirstNameArray(instructorName)
+  const lastNameArray = getAndFormatLastNameArray(instructorName)
+
+  let queryBegin = `https://solr-aws-elb-production.ratemyprofessors.com/solr/rmp/select/?wt=json&q=schoolid_s%3A1413+AND+(`
+
+  for (i = 0; i < firstNameArray.length; i++) {
+    for (j = 0; j < lastNameArray.length; j++) {
+      const firstName = firstNameArray[i]
+      const lastName = lastNameArray[j]
+
+      const search = `(teacherlastname_t:${lastName}+AND+teacherfirstname_t:${firstName})`
+      queryBegin = queryBegin.concat(search)
+
+      if (i != firstNameArray.length - 1) {
+        queryBegin = queryBegin.concat('+OR')
       }
     }
   }
+  const queryEnd = `)&sort=teacherlastname_t+asc&fl=pk_id+teacherfirstname_t+teacherlastname_t+total_number_of_ratings_i+averageratingscore_rf+schoolid_s+rating_class`
+
+  queryBegin = queryBegin.concat(queryEnd)
+
+  return queryBegin
 }
 
-function getAndFormatFirstName(instructorName) {
-  const nameArray = instructorName.split(', ')
-  const firstNameLowerCase = nameArray[1].split(' ')[0].toLowerCase()
-  return firstNameLowerCase.charAt(0).toUpperCase() + firstNameLowerCase.slice(1)
-}
+function backupQueryConstructor(instructorName) {
+  const firstNameArray = getAndFormatFirstNameArray(instructorName)
+  const lastNameArray = getAndFormatLastNameArray(instructorName)
 
-function getAndFormatLastName(instructorName) {
-  const nameArray = instructorName.split(', ')
-  const lastNameLowerCase = nameArray[0].split(' ')[1] ? nameArray[0].split(' ')[1].toLowerCase() : nameArray[0].split(' ')[0].toLowerCase()
-  return lastNameLowerCase.charAt(0).toUpperCase() + lastNameLowerCase.slice(1)
+  let queryBegin = `https://solr-aws-elb-production.ratemyprofessors.com/solr/rmp/select/?wt=json&q=schoolid_s%3A1413+AND+(`
+
+  for (i = 0; i < firstNameArray.length; i++) {
+    for (j = 0; j < lastNameArray.length; j++) {
+      const firstName = firstNameArray[i]
+      const lastName = lastNameArray[j]
+
+      const search = `((teacherlastname_t:${lastName}+AND+teacherfirstname_t:${firstName}~)+OR+(teacherlastname_t:${lastName}~+AND+teacherfirstname_t:${firstName}))`
+      queryBegin = queryBegin.concat(search)
+
+      if (i != firstNameArray.length - 1) {
+        queryBegin = queryBegin.concat('+OR')
+      }
+    }
+  }
+  const queryEnd = `)&sort=teacherlastname_t+asc&fl=pk_id+teacherfirstname_t+teacherlastname_t+total_number_of_ratings_i+averageratingscore_rf+schoolid_s+rating_class`
+
+  queryBegin = queryBegin.concat(queryEnd)
+
+  return queryBegin
 }
 
 
