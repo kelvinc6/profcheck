@@ -1,4 +1,8 @@
-var shadowRoot = initializeTippyShadowRoot();
+var $ = require("jquery");
+import { createTooltip, createTooltipHTML } from "./helpers";
+import { SchoolId } from "./constants";
+import { RMPResponse, RMPTeacherData } from "./d";
+
 const nameTable: JQuery = $("table[class=\\table] > tbody").children();
 
 nameTable.each((i: number, row: HTMLElement) => {

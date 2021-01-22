@@ -6,11 +6,18 @@ const RMP_TEACHER_BASE_URL: string =
 const RMP_ADD_TEACHER_URL: string =
   "https://www.ratemyprofessors.com/AddTeacher.jsp";
 
-enum SchoolId {
+export enum SchoolId {
   UBC = 1413,
   UBC_OKANAGAN = 5436,
   UofT = 12184,
   UofT_ST_GEORGE = 1484,
   UofT_MISSISSAUGA = 4928,
   UofT_SCARBOROUGH = 4919,
+}
+
+export {
+  FUZZY_CONST_UBC,
+  FUZZY_CONST_UOFT,
+  RMP_ADD_TEACHER_URL,
+  RMP_TEACHER_BASE_URL
 }

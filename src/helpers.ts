@@ -1,11 +1,8 @@
-function initializeTippyShadowRoot() {
-  $(document.body).append('<div id="tippy-shadow"></div>');
-  var shadowRoot = document
-    .getElementById("tippy-shadow")
-    ?.attachShadow({ mode: "open" });
-  shadowRoot?.appendChild($(`style[data-tippy-stylesheet=""]`)[0]);
-  return shadowRoot;
-}
+import tippy from 'tippy.js';
+import 'tippy.js/dist/tippy.css';
+
+import {RMP_TEACHER_BASE_URL} from './constants'
+import {RMPTeacherData} from './d'
 
 function createNameSpan(rowIndex: number, nameIndex: number, name: string) {
   return jQuery.parseHTML(
@@ -14,14 +11,11 @@ function createNameSpan(rowIndex: number, nameIndex: number, name: string) {
 }
 
 function createTooltip(selector: string, text: string) {
-  //@ts-ignore
   return tippy(selector, {
-    //@ts-ignore
     content: text,
     allowHTML: true,
     interactive: true,
     placement: "right",
-    appendTo: shadowRoot,
   });
 }
 
@@ -47,4 +41,10 @@ function createTooltipHTML(teachers: RMPTeacherData[]) {
     }
   });
   return html;
+}
+
+export {
+  createNameSpan,
+  createTooltip,
+  createTooltipHTML,
 }

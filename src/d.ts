@@ -1,3 +1,5 @@
+import {SchoolId} from './constants'
+
 interface RMPRequest {
   name: string;
   schoolIds: SchoolId[];
@@ -23,4 +25,11 @@ interface RMPTeacherData {
 
 interface Typos {
   [key: string]: string;
+}
+
+export {
+  RMPRequest,
+  RMPResponse,
+  RMPTeacherData,
+  Typos
 }

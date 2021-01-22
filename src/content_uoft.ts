@@ -1,4 +1,7 @@
-var shadowRoot = initializeTippyShadowRoot();
+import { createNameSpan, createTooltip, createTooltipHTML } from "./helpers";
+import { SchoolId } from "./constants";
+import { RMPTeacherData, RMPResponse } from "./d";
+
 const tableBody: JQuery = $("tbody[role=alert]").children();
 
 //Iterate through each row of table

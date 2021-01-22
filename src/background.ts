@@ -1,3 +1,7 @@
+import { SchoolId } from "./constants";
+import { FUZZY_CONST_UBC, FUZZY_CONST_UOFT } from "./constants";
+import { Typos, RMPResponse } from "./d";
+
 chrome.runtime.onInstalled.addListener(function (details) {
   updateTypos();
   chrome.alarms.create("updateTypos", {
