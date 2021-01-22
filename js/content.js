@@ -2,9 +2,9 @@
  * Rows of table of instructor/TA names
  * @type {jQuery}
  */
-const table = $("table[class=\\table] > tbody").children();
+const nameTable = $("table[class=\\table] > tbody").children();
 
-table.each((i, elem) => {
+nameTable.each((i, elem) => {
   /**
    * HTML elements given as string of the rating, number of ratings, and link
    * @type {String}
@@ -20,9 +20,9 @@ table.each((i, elem) => {
  * Array to keep track of instructor names iterated over
  * @type {Array<string>}
  */
-let searched = [];
+let searchedNames = [];
 
-table.each((i, elem) => {
+nameTable.each((i, elem) => {
   /**
    * Whether the first element of a row indicates a TA
    * @type {boolean}
@@ -35,17 +35,19 @@ table.each((i, elem) => {
    */
   let instructorName = $(elem).find('td > a').text().replace("(Coordinator)", "");
 
-  //Break out of loop upon reaching a TA, as instructors are listed first
-  if (isTA) {
+  //Break out of loop upon reaching a TA, or if no instructor name is present
+  if (isTA || !instructorName) {
     return false;
   }
 
+  console.log('There was a name')
+
   //Continue if instructor has been seen before, or if no name present
-  if (searched.includes(instructorName) || !instructorName) {
+  if (searchedNames.includes(instructorName) || !instructorName) {
     return;
   } else {
     //Keep track of instructors iterated over
-    searched.push(instructorName);
+    searchedNames.push(instructorName);
   }
 
   //Loading indicator
