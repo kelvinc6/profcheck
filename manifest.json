@@ -17,6 +17,6 @@
     "https://*.ratemyprofessors.com/*"
   ],
   "icons": {
-    "128": "icon128.png"
+    "128": "icons/icon128.png"
   }
 }
