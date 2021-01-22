@@ -39,7 +39,7 @@ chrome.runtime.onMessage.addListener(function (req, sender, sendResponse) {
 });
 
 interface RMPData {
-  isSuccessful: boolean;
+  success: boolean;
   numFound: number;
   avgRatingScore: number;
   numRatings: number;
@@ -58,18 +58,16 @@ async function getFormattedInstructorInfo(
 ): Promise<RMPData> {
   instructorName = typoCheck(school, instructorName, typos);
 
-  const url: string = queryURLConstructor(school, instructorName, isUBCO);
+  const url: string = urlConstructor(school, instructorName, isUBCO);
   const json = await fetch(url)
     .then((res) => res.json())
-    .catch((err) => {
-      return {};
-    });
+    .catch((err) => {});
 
   if (json.response.numFound != 0) {
     const professorData = json.response.docs[0];
     const PROF_LINK = `https://www.ratemyprofessors.com/ShowRatings.jsp?tid=${professorData.pk_id}`;
     return {
-      isSuccessful: true,
+      success: true,
       numFound: json.response.numFound,
       avgRatingScore: professorData.averageratingscore_rf,
       numRatings: professorData.total_number_of_ratings_i,
@@ -77,7 +75,7 @@ async function getFormattedInstructorInfo(
     };
   } else {
     return {
-      isSuccessful: false,
+      success: false,
       numFound: json.response.numFound,
       avgRatingScore: 0,
       numRatings: 0,
@@ -87,8 +85,7 @@ async function getFormattedInstructorInfo(
 }
 
 /**
- * Formats instructor name for use in search query
- * @param {string} instructorName
+ * Creates an Apache Solr search query depending on school
  */
 function queryConstructor(school: string, instructorName: string) {
   switch (school) {
@@ -112,10 +109,8 @@ function queryConstructor(school: string, instructorName: string) {
 
 /**
  * Returns name array of a name with hyphenated names split and appended to the array
- * @param {string} instructorName
- * @returns {string[]}
  */
-function splitName(instructorName: string) {
+function splitName(instructorName: string): string[] {
   var nameArray = instructorName.split(/[\s,]+/);
   nameArray.forEach((name) => {
     if (name.includes("-")) {
@@ -126,7 +121,7 @@ function splitName(instructorName: string) {
   return nameArray;
 }
 
-function queryURLConstructor(
+function urlConstructor(
   school: string,
   instructorName: string,
   isUBCO: boolean
@@ -150,8 +145,6 @@ function queryURLConstructor(
  * Check's a name against an set of key-value pairs consisting of an
  * incorrect spelling and the correct spelling, and returns the correct
  * spelling if found
- * @param {string} instructorName
- * @param {Object.<string,string>} typos
  */
 function typoCheck(
   school: string,

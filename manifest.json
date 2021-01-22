@@ -10,7 +10,7 @@
   "content_scripts": [
     {
       "matches": ["https://courses.students.ubc.ca/cs/*"],
-      "js": ["js/lib/jquery-3.5.1.slim.min.js", "js/content_UBC.js"]
+      "js": ["js/lib/jquery-3.5.1.slim.min.js", "js/content_ubc.js"]
     },
     {
       "matches": [
@@ -21,8 +21,8 @@
         "js/lib/jquery-3.5.1.slim.min.js",
         "js/lib/popper.min.js",
         "js/lib/tippy-bundle.umd.min.js",
-        "js/HELPERS.js",
-        "js/content_UOFT.js"
+        "js/helpers.js",
+        "js/content_uoft.js"
       ]
     }
   ],

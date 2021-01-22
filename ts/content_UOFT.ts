@@ -36,7 +36,7 @@ tableBody.each((i: number, row: HTMLElement) => {
       chrome.runtime.sendMessage(
         { school: "UofT", instructorName: name },
         (res: RMPData) => {
-          const isSuccessful = res.isSuccessful;
+          const isSuccessful = res.success;
           const avgRatingScore = res.avgRatingScore;
           const numFound = res.numFound;
           const linkURL = res.link;
