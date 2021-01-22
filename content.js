@@ -5,7 +5,7 @@ const typos = {
 }
 
 const formatInstructorNames = string => {
-    return string.replace(/,/, "").replace(/ /g, "+")
+    return string.replace("(Coordinator)","").replace(/,/, "").replace(/ /g, "+")
 }
 
 const instructorRow = $("table[class=\\table] > tbody > tr > td")
@@ -23,7 +23,7 @@ chrome.runtime.sendMessage({ instructorName: instructorName }, function (res) {
     const link = res.link
 
     const ratingHTML = `<td>Rating: ${rating} / 5</td>`
-    const linkHTML = `<td><a href='${link}'>RMP Page</a></td>`
+    const linkHTML = `<td><a href='${link}' target="_blank">RMP Page</a></td>`
 
     //TODO: change logic fetch RMP for all professors
     $('td:contains("Instructor")').parent().append(ratingHTML + linkHTML)
