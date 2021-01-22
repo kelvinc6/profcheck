@@ -7,14 +7,6 @@ chrome.runtime.onMessage.addListener(
 );
 
 async function getRating(instructorName) {
-  //Searching with an empty string results in random results of professors
-  if (!instructorName) {
-    return {
-      successful: false,
-      rating: null,
-      link: null
-    }
-  }
 
   const URL = "https://www.ratemyprofessors.com"
 

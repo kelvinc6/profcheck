@@ -1,10 +1,9 @@
 //Used for storing typos
 const typos = {
-    'ALINIAEIFARD+FARID': "ALINIAIEFARD+FARID",
-    'RUED+THOMAS': "RUD+THOMAS",
-    'O\'NEILL+ANGELA': "O\'NEILL+ANGIE",
-    'OTTO+SARAH': "OTTO+SALLY"
-
+    'ALINIAEIFARD, FARID': "ALINIAIEFARD, FARID",
+    'RUED, THOMAS': "RUD, THOMAS",
+    'O\'NEILL, ANGELA': "O\'NEILL, ANGIE",
+    'OTTO, SARAH': "OTTO,SALLY"
 }
 
 const formatInstructorNames = string => {
@@ -16,6 +15,17 @@ const formatInstructorNames = string => {
 
 const table = $('table[class=\\table] > tbody').children()
 
+//Set up correct HTML elements
+table.each((i, elem) => {
+    
+    const ratingHTML = `<td style="min-width:10em" id="rating${i}"></td>`
+    const numRatingsHTML = `<td style="min-width:10em" id="numRatings${i}"></td>`
+    const linkHTML = `<td style="min-width:10em"><a id="link${i}" target="_blank"></a></td>`
+
+    $(elem).append(ratingHTML + numRatingsHTML + linkHTML)
+})
+
+//Array of searched instructors
 let searched = []
 
 //Iterate through all the instructors
@@ -29,11 +39,13 @@ table.each((i, elem) => {
     }
 
     //Break out of loop upon reaching a TA
-    if (isTA || searched.includes(instructorName)) { return false }
+    if (isTA || searched.includes(instructorName) || !instructorName) { return false }
 
+    //Keep track of instructors iterated over
     searched.push(instructorName)
 
-    $(elem).append("<td class='loader'>Loading</td>")
+    //Loading indicator
+    $(`#rating${i}`).text("Loading...")
 
     chrome.runtime.sendMessage({ instructorName: instructorName }, function (res) {
         const isSuccessful = res.successful
@@ -44,37 +56,20 @@ table.each((i, elem) => {
         console.log(isSuccessful)
 
         if (isSuccessful) {
-            const ratingHTML = `<td>Rating: ${rating} / 5</td>`
-            const numRatingsHTML = `<td>(${numRatingsString})</td>`
-            const linkHTML = `<td><a href='${link}' target="_blank">RMP Page</a></td>`
-
-            //TODO: change logic fetch RMP for all professors
-            $(elem).append(ratingHTML + numRatingsHTML + linkHTML)
-
+            //Hide loading indicator
             $('.loader').hide()
+
+            $(`#rating${i}`).text(`Rating: ${rating} / 5`)
+            $(`#numRatings${i}`).text(`(${numRatingsString})`)
+            $(`#link${i}`).attr("href", link).text(`RMP Page`)
         } else {
-            console.log("didn' work");
-            $('.loader').hide()
+            $(`#numRatings${i}`).hide()
+            $(`#link${i}`).hide()
+            
 
-            $(elem).append("<td>Could not work</td>")
+            //Indicate instructor could not be found
+            $(`#rating${i}`).text("Error")
         }
     })
 
 })
-
-// $('td:contains("Instructor")').parent().append("<td class='loader'>Loading</td>")
-
-// chrome.runtime.sendMessage({ instructorName: instructorName }, function (res) {
-//     const rating = res.rating
-//     const link = res.link
-//     const numRatingsString = res.numRatingsString
-
-//     const ratingHTML = `<td>Rating: ${rating} / 5</td>`
-//     const numRatingsHTML = `<td>(${numRatingsString})</td>`
-//     const linkHTML = `<td><a href='${link}' target="_blank">RMP Page</a></td>`
-
-//     //TODO: change logic fetch RMP for all professors
-//     $('td:contains("Instructor")').parent().append(ratingHTML + numRatingsHTML + linkHTML)
-
-//     $('.loader').hide()
-// })
