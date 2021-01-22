@@ -20,6 +20,6 @@ https://chrome.google.com/webstore/detail/profcheck/iejcdmcgelpioejdpeoifnaemnei
 
 ## Example
 
-### CAPS 301:
+### CAPS 301
 
 ![example](https://i.imgur.com/6HgKHsd.png)
