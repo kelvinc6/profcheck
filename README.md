@@ -19,7 +19,13 @@ https://chrome.google.com/webstore/detail/profcheck/iejcdmcgelpioejdpeoifnaemnei
 
 ### Manual
 
-This project now uses Typescript and webpack. Clone this repository and run:
+This project now uses Typescript and webpack. Clone this repository and install the required dependencies:
+
+```shell
+npm install
+```
+
+Then compile with webpack:
 
 ```shell
 npm run build
