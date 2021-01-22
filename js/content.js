@@ -1,22 +1,38 @@
-//The table with class "table" has instrucors and TA names
+/**
+ * Rows of table of instructor/TA names
+ * @type {jQuery}
+ */
 const table = $("table[class=\\table] > tbody").children();
 
-//Set up correct HTML elements to fill in
 table.each((i, elem) => {
+  /**
+   * HTML elements given as string of the rating, number of ratings, and link
+   * @type {String}
+   */
   const ratingElement = `<td style="min-width:10em" id="rating${i}"></td>`;
   const numRatingsElement = `<td style="min-width:10em" id="numRatings${i}"></td>`;
   const linkElement = `<td style="min-width:10em"><a href="#" id="link${i}" target="_blank"></a></td>`;
 
-  //Append the template elements into the table row
   $(elem).append(ratingElement + numRatingsElement + linkElement);
 });
 
-//Array of searched instructors
+/**
+ * Array to keep track of instructor names iterated over
+ * @type {Array<string>}
+ */
 let searched = [];
 
-//Iterate through all the instructors
 table.each((i, elem) => {
+  /**
+   * Whether the current row is a TA
+   * @type {boolean}
+   */
   const isTA = !!$(elem).has('td:contains("TA:")').length;
+
+  /**
+   * Instructor name with the '(Coordinator)' string removed
+   * @type {String}
+   */
   let instructorName = $(elem).find("a").text().replace("(Coordinator)", "");
 
   //Break out of loop upon reaching a TA, as instructors are listed first
@@ -37,10 +53,25 @@ table.each((i, elem) => {
 
   chrome.runtime.sendMessage(
     { isUBCO: isUBCO(), instructorName: instructorName },
-    function (result) {
+    (result) => {
+      /**
+       * Whether the search request was successful
+       * @type {boolean}
+       */
       const isSuccessful = result.isSuccessful;
+
+      /**
+       * Rate My Professor's rating out of 5
+       * @type {number}
+       */
       const rating = result.averageRatingScore;
+
+      /**
+       * Link to the professor's Rate My Professor's page
+       * @type {string}
+       */
       const link = result.link;
+
       const numRatings = result.numRatings;
 
       if (isSuccessful) {
@@ -59,6 +90,9 @@ table.each((i, elem) => {
   );
 });
 
+/**
+ * Check's if the current page is on UBC Okanagan's course explorer
+ */
 function isUBCO() {
   return $(".ubc7-campus").attr("id") === "ubc7-okanagan-campus";
 }

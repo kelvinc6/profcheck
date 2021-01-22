@@ -1,4 +1,7 @@
-//Setups the alarm to periodically update the typos document on install
+/** 
+ * Gets the current up-to-date typos.json file from GitHub on installation
+ * @listens onInstalled
+ */
 chrome.runtime.onInstalled.addListener(function () {
   updateTypos();
   chrome.alarms.create("updateTypos", {
@@ -6,34 +9,55 @@ chrome.runtime.onInstalled.addListener(function () {
   });
 });
 
-//Adding listener to typos updater
+/** 
+ * Updates the local typos.json
+ * @listens onAlarm
+ */
 chrome.alarms.onAlarm.addListener((alarm) => updateTypos());
 
-//Add listener for content script message
+/** 
+ * Listens for message from content script with instructor name
+ * @listens onMessage
+ */
 chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
   const instructorName = request.instructorName;
   const isUBCO = request.isUBCO;
 
   //Get stored typos for checking, then call getInfo
   chrome.storage.local.get("typos", (storage) =>
-    getInfo(instructorName, isUBCO, storage.typos).then((res) =>
-      sendResponse(res)
-    )
+    getFormattedInstructorInfo(
+      instructorName,
+      isUBCO,
+      storage.typos
+    ).then((res) => sendResponse(res))
   );
   return true;
 });
 
-//Get instructor information from RMP
-async function getInfo(instructorName, isUBCO, typos) {
+/**
+ * The formatted result of a search to RMP's database
+ * @typedef {Object} RMPData
+ * @property {boolean} isSuccessful - Whether the query was sucessful in returning a result
+ * @property {number} averageRatingScore - Rating out of 5
+ * @property {number} numRatings - Number of ratings
+ * @property {string} link - Link to RMP page
+ */
+
+/**
+ * Get the Rate My Professor's data of a instructor at UBC after typo checking
+ * @param {string} instructorName - Instructor name in format of UBC's SSC
+ * @param {boolean} isUBCO
+ * @param {Object.<string, string>} typos
+ * @returns {Promise<RMPData>}
+ */
+async function getFormattedInstructorInfo(instructorName, isUBCO, typos) {
   instructorName = typoCheck(instructorName, typos);
 
-  //Create a fuzzy search query in case of typos
   const url = queryConstructor(instructorName, isUBCO);
 
   let responseJson = await fetch(url).then((res) => res.json());
-  //There is a possibility of RMP having two entries of the same professor; we always take the first result, as
 
-  //results are sorted by number of ratings
+  //We always take the first result
   if (responseJson.response.numFound != 0) {
     const professorData = responseJson.response.docs[0];
     const PROF_LINK = `https://www.ratemyprofessors.com/ShowRatings.jsp?tid=${professorData.pk_id}`;
@@ -53,8 +77,15 @@ async function getInfo(instructorName, isUBCO, typos) {
   }
 }
 
-//Creates an array of possible first/last names (0 for last name, 1 for first name)
-//e.g. createNameArray('ALLEN YANG, JERRY', 0) = ['ALLEN', 'YANG']
+/**
+ * Creates an array of possible first/last names (0 for last name, 1 for first name)
+ * @param {string} instructorName
+ * @param {number} i
+ * 
+ * @example
+ * //returns ['ALLEN', 'YANG']
+ * createNameArray('ALLEN YANG, JERRY', 0)
+ */
 function createNameArray(instructorName, i) {
   const nameArray = instructorName.split(", ");
   const splitNameArray = nameArray[i].split(" ");
@@ -65,7 +96,12 @@ function createNameArray(instructorName, i) {
   return splitNameArray;
 }
 
-//Constructs a search query
+/**
+ * Constructs a fuzzy search query of all combinations of first and last names
+ * to Rate My Professor's database
+ * @param {string} instructorName
+ * @param {boolean} isUBCO
+ */
 function queryConstructor(instructorName, isUBCO) {
   const firstNameArray = createNameArray(instructorName, 1);
   const lastNameArray = createNameArray(instructorName, 0);
@@ -92,12 +128,21 @@ function queryConstructor(instructorName, isUBCO) {
   return databaseURL;
 }
 
+/**
+ * Check's a name against an set of key-value pairs consisting of an
+ * incorrect spelling and the correct spelling, and returns the correct
+ * spelling if found
+ * @param {string} instructorName
+ * @param {Object.<string,string>} typos
+ */
 function typoCheck(instructorName, typos) {
   const hasTypo = typos.hasOwnProperty(instructorName);
   return hasTypo ? typos[instructorName] : instructorName;
 }
 
-//Updates local typos
+/**
+ * Updates the typos.json file in Chrome's local storage from remote GitHub repository
+ */
 function updateTypos() {
   fetch("https://insidiousdata.github.io/data/typos.json")
     .then((res) => res.json())
@@ -108,7 +153,7 @@ function updateTypos() {
     )
     .catch((error) =>
       chrome.storage.local.set({ typos: {} }, function () {
-        console.log("Could not get typos!");
+        console.log("Could not update typos!");
       })
     );
 }
