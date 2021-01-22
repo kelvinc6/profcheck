@@ -67,7 +67,7 @@ function createTooltipHTML(teachers: RMPTeacherData[]) {
 }
 
 function createTooltipNoResultsHTML() {
-  return `<span>No Rate My Professor's Pages Found :(</span></br><a style="color:DeepSkyBlue;" href="${RMP_ADD_TEACHER_URL}" target="_blank">Add RMP Page</a>`;
+  return `<span>No Rate My Professors Pages Found :(</span></br><a style="color:DeepSkyBlue;" href="${RMP_ADD_TEACHER_URL}" target="_blank">Add RMP Page</a>`;
 }
 
 export {
