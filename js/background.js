@@ -48,7 +48,7 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
  * @param {string} instructorName - Instructor name in format of UBC's SSC
  * @param {boolean} isUBCO
  * @param {Object.<string, string>} typos
- * @returns {Promise<RMPData>}
+ * @returns {Promise<{isSuccessful: boolean, averageRatingScore: number, numRatings: number, link: string}>}
  */
 async function getFormattedInstructorInfo(instructorName, isUBCO, typos) {
   instructorName = typoCheck(instructorName, typos);
