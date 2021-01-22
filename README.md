@@ -1,5 +1,7 @@
 # UBC Rate My Professors Extension
 
-This extension provides the rating and link to an instructor's Rate My Professors page on UBC's course browser.
+This extension finds the instructor name for a course on the University of British Columbia's course explorer page, looks up the given professor(s) on Rate My Professors, and displays their rating as well as their RMP link directly in the course explorer page.
 
-![example](https://i.imgur.com/F8ekM5A.png)
+## Installation
+
+https://chrome.google.com/webstore/detail/profcheck/iejcdmcgelpioejdpeoifnaemneihagc
