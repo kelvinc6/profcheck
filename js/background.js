@@ -57,6 +57,8 @@ async function getFormattedInstructorInfo(instructorName, isUBCO, typos) {
 
   let responseJson = await fetch(url).then((res) => res.json());
 
+  console.log(responseJson.responseHeader.QTime)
+
   //We always take the first result
   if (responseJson.response.numFound != 0) {
     const professorData = responseJson.response.docs[0];
@@ -88,6 +90,10 @@ function formatName(instructorName, FUZZY_CONST) {
     .replace("-", `~${FUZZY_CONST}%20`)
     .concat(`~${FUZZY_CONST}`)
     .toLowerCase();
+}
+
+function formatName(instructorName) {
+  return instructorName.replace(', ','~%20').concat('~').toLowerCase()
 }
 
 /**
