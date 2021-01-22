@@ -4,7 +4,7 @@ import {
   FUZZY_CONST_UOFT,
   RMP_QUERY_BASE_URL,
 } from "./constants";
-import { Typos, RMPResponse } from "./d";
+import { Typos, RMPResponse } from "./types";
 
 /**
  * Create a typo update alarm on installation
@@ -22,7 +22,7 @@ chrome.runtime.onInstalled.addListener(() => {
  */
 chrome.runtime.onMessage.addListener(function (req, sender, sendResponse) {
   const schoolIds: SchoolId[] = req.schoolIds;
-  let name = req.name;
+  let name: string = req.name;
 
   chrome.storage.local.get("typos", (storage) => {
     const typos: Typos = storage.typos;
@@ -67,7 +67,7 @@ async function getRMPResponse(url: string): Promise<RMPResponse> {
  * @param school -
  * @param name
  */
-function queryConstructor(school: SchoolId, name: string) {
+function queryConstructor(school: SchoolId, name: string): string {
   switch (school) {
     case SchoolId.UBC_OKANAGAN:
     case SchoolId.UBC:
@@ -97,7 +97,7 @@ function queryConstructor(school: SchoolId, name: string) {
  * @param schoolid - array of school ids to search
  * @param mm - Solr minimum should match
  */
-function urlConstructor(query: string, schoolIdArray: SchoolId[]) {
+function urlConstructor(query: string, schoolIdArray: SchoolId[]): string {
   let schoolIdFilterQuery: string = "";
   schoolIdArray.forEach((schoolId, i) => {
     schoolIdFilterQuery = schoolIdFilterQuery.concat(schoolId.toString());
@@ -124,7 +124,7 @@ function typoCheck(name: string, typos: Typos): string {
 /**
  * Updates the typos.json file in Chrome's local storage from remote GitHub repository
  */
-function updateTypos() {
+function updateTypos(): void {
   fetch("https://insidiousdata.github.io/data/typos.json")
     .then((res) => res.json())
     .then((typos) => {

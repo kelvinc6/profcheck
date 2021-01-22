@@ -5,10 +5,27 @@
   margin-left: auto !important;
   margin-right: auto !important;
   border-style: inset !important;
-  border-width: 1px !important;
+  border: 1px solid hsla(50, 15%, 75%, 0.95) !important;
+  width: 96%;
 }
 
 .tippy-box[data-theme~="dark"] {
   background-color: hsla(215, 15%, 25%, 0.97);
   color: hsla(50, 100%, 96%, 0.95);
+  box-shadow: 0 4px 14px -2px rgba(0, 8, 16, 0.35);
+  border: 2px solid hsla(215, 15%, 40%, 0.97);
+}
+
+.tippy-box[data-theme~="dark"][data-placement^="top"] > .tippy-arrow::before {
+  border-top-color: hsla(215, 15%, 35%, 0.97);
+}
+.tippy-box[data-theme~="dark"][data-placement^="bottom"]
+  > .tippy-arrow::before {
+  border-bottom-color: hsla(215, 15%, 35%, 0.97);
+}
+.tippy-box[data-theme~="dark"][data-placement^="left"] > .tippy-arrow::before {
+  border-left-color: hsla(215, 15%, 35%, 0.97);
+}
+.tippy-box[data-theme~="dark"][data-placement^="right"] > .tippy-arrow::before {
+  border-right-color: hsla(215, 15%, 35%, 0.97);
 }

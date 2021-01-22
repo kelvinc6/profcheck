@@ -1,19 +1,14 @@
-import { Instance } from "tippy.js";
 import {
   createNameSpan,
   createTippyInstance,
-  createTooltipHTML,
-  createTooltipNoResultsHTML,
-  createTooltipErrorHTML,
+  tooltipHandleResponse,
 } from "./helpers";
 import { SchoolId } from "./constants";
-import { RMPTeacherData, RMPResponse } from "./d";
+import { RMPResponse } from "./types";
 import "../css/styles.css";
 import $ from "jquery";
 
 const tableBody: JQuery = $("tbody[role=alert]").children();
-
-let tippyInstances: Instance[] = [];
 
 tableBody.each((i: number, row: HTMLElement) => {
   const namesArray: string[] = $(row)
@@ -40,8 +35,6 @@ tableBody.each((i: number, row: HTMLElement) => {
         "Loading..."
       )[0];
 
-      tippyInstances.push(instance);
-
       chrome.runtime.sendMessage(
         {
           schoolIds: [
@@ -53,18 +46,7 @@ tableBody.each((i: number, row: HTMLElement) => {
           name,
         },
         (res: RMPResponse) => {
-          const numFound = res.numFound;
-          const docs: RMPTeacherData[] = res.docs;
-          const error: Error | undefined = res.error;
-
-          if (numFound != 0) {
-            const html = createTooltipHTML(docs);
-            instance.setContent(html);
-          } else if (error) {
-            instance.setContent(createTooltipErrorHTML());
-          } else {
-            instance.setContent(createTooltipNoResultsHTML());
-          }
+          tooltipHandleResponse(res, instance);
         }
       );
     })(k);

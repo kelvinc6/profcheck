@@ -1,18 +1,10 @@
-import {
-  createTippyInstance,
-  createTooltipHTML,
-  createTooltipNoResultsHTML,
-  createTooltipErrorHTML,
-} from "./helpers";
+import { createTippyInstance, tooltipHandleResponse } from "./helpers";
 import { SchoolId } from "./constants";
-import { RMPResponse, RMPTeacherData } from "./d";
-import { Instance } from "tippy.js";
+import { RMPResponse } from "./types";
 import "../css/styles.css";
 import $ from "jquery";
 
 const nameTable: JQuery = $("table[class=\\table] > tbody").children();
-
-let tippyInstances: Instance[] = [];
 
 nameTable.each((i: number, row: HTMLElement) => {
   const isTA: boolean = $(row).children().first().text().includes("TA:");
@@ -31,23 +23,10 @@ nameTable.each((i: number, row: HTMLElement) => {
   $(row).find("a").attr("id", `name${i}`);
   const instance = createTippyInstance(`a#name${i}`, "Loading...")[0];
 
-  tippyInstances.push(instance);
-
   chrome.runtime.sendMessage(
     { schoolIds: [getSchoolId()], name },
     (res: RMPResponse) => {
-      const numFound = res.numFound;
-      const docs: RMPTeacherData[] = res.docs;
-      const error: Error | undefined = res.error;
-
-      if (numFound != 0) {
-        const html = createTooltipHTML(docs);
-        instance.setContent(html);
-      } else if (error) {
-        instance.setContent(createTooltipErrorHTML());
-      } else {
-        instance.setContent(createTooltipNoResultsHTML());
-      }
+      tooltipHandleResponse(res, instance);
     }
   );
 });

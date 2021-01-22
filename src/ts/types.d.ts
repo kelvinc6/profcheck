@@ -23,7 +23,8 @@ interface RMPResponse {
  * Rate My Professors teacher data
  */
 interface RMPTeacherData {
-  averageratingscore_rf: number;
+  averageratingscore_rf: number | undefined;
+  averageeasyscore_rf: number | undefined;
   pk_id: number;
   schoolname_s: string;
   teacherdepartment_s: string;
