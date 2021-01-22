@@ -78,53 +78,33 @@ async function getFormattedInstructorInfo(instructorName, isUBCO, typos) {
 }
 
 /**
- * Creates an array of possible first/last names (0 for last name, 1 for first name)
+ * Formats instructor name for use in search query
  * @param {string} instructorName
- * @param {number} i
- *
- * @example
- * //returns ['ALLEN', 'YANG']
- * createNameArray('ALLEN YANG, JERRY', 0)
+ * @param {number} FUZZY_CONST - Degree of fuzziness of search
  */
-function createNameArray(instructorName, i) {
-  const nameArray = instructorName.split(", ");
-  const splitNameArray = nameArray[i].split(" ");
-  for (i = 0; i < splitNameArray.length; i++) {
-    splitNameArray[i] =
-      splitNameArray[i].charAt(0) + splitNameArray[i].toLowerCase().slice(1);
-  }
-  return splitNameArray;
+function formatName(instructorName, FUZZY_CONST) {
+  return instructorName
+    .replace(", ", `~${FUZZY_CONST}%20`)
+    .replace("-", `~${FUZZY_CONST}%20`)
+    .concat(`~${FUZZY_CONST}`)
+    .toLowerCase();
 }
 
 /**
- * Constructs a fuzzy search query of all combinations of first and last names
+ * Constructs a fuzzy search query of first and last name
  * to Rate My Professor's database
  * @param {string} instructorName
  * @param {boolean} isUBCO
  */
 function queryConstructor(instructorName, isUBCO) {
-  const firstNameArray = createNameArray(instructorName, 1);
-  const lastNameArray = createNameArray(instructorName, 0);
+  const FUZZY_CONST = 0.6;
+
+  instructorName = formatName(instructorName, FUZZY_CONST);
+
   const schoolID = isUBCO ? "5436" : "1413";
   //Includes a isFuzzy param for reference purposes
-  let databaseURL = `https://solr-aws-elb-production.ratemyprofessors.com/solr/rmp/select/?omitHeader=true&spellcheck=false&wt=json&sort=total_number_of_ratings_i+desc&fl=pk_id+teacherfirstname_t+teacherlastname_t+total_number_of_ratings_i+averageratingscore_rf+schoolid_s+rating_class&q=schoolid_s:${schoolID}+AND+(`;
+  let databaseURL = `https://solr-aws-elb-production.ratemyprofessors.com/solr/rmp/select/?spellcheck=false&fq=schoolid_s:${schoolID}&wt=json&defType=edismax&qf=teacherfirstname_t+teacherlastname_t&fl=pk_id+teacherfirstname_t+teacherlastname_t+total_number_of_ratings_i+averageratingscore_rf+schoolid_s&q=${instructorName}&mm=2`;
 
-  for (i = 0; i < firstNameArray.length; i++) {
-    for (j = 0; j < lastNameArray.length; j++) {
-      const firstName = firstNameArray[i];
-      const lastName = lastNameArray[j];
-      const searchQuery = `(teacherlastname_t:${lastName}~+AND+teacherfirstname_t:${firstName}~)`;
-
-      databaseURL = databaseURL.concat(searchQuery);
-
-      //Close statement with closing parentheses or add an OR
-      if (i === firstNameArray.length - 1 && j === lastNameArray.length - 1) {
-        databaseURL = databaseURL.concat(")");
-      } else {
-        databaseURL = databaseURL.concat("+OR+");
-      }
-    }
-  }
   return databaseURL;
 }
 

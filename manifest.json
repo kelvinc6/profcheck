@@ -2,7 +2,7 @@
   "manifest_version": 2,
   "name": "ProfCheck",
   "description": "View Rate My Professors rating directly in UBC's course browser!",
-  "version": "1.0.5",
+  "version": "1.1.0",
   "background": {
     "scripts": ["js/jquery-3.5.1.slim.min.js", "js/background.js"],
     "persistent": false
