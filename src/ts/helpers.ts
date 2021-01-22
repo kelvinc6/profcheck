@@ -29,6 +29,7 @@ function createTippyInstance(selector: string, html: string) {
     content: html,
     theme: "dark",
     allowHTML: true,
+    interactiveBorder: 6,
     interactive: true,
     offset: [0, 15],
     placement: "right",
