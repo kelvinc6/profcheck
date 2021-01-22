@@ -4,9 +4,9 @@ function createNameSpan(rowIndex: number, nameIndex: number, name: string) {
   );
 }
 
-function createTooltip(selector: string, text: string): void {
+function createTooltip(selector: string, text: string) {
   //@ts-ignore
-  tippy(selector, {
+  return tippy(selector, {
     content: text,
     allowHTML: true,
     interactive: true,
@@ -25,13 +25,14 @@ function createTooltipEntriesHTML(teachers: RMPTeacherData[]) {
       RMP_TEACHER_BASE_URL + teacher.pk_id
     }" target="_blank">RMP Page</a>`;
     html = html.concat(
-      
-      `${firstName} ${lastName} </br> Department: ${department} </br> Rating: ${rating} </br> ${linkHTML}`
+      `${firstName} ${lastName} </br> Department: ${department} </br> Rating: ${
+        rating ? rating : "N/A"
+      } </br> ${linkHTML}`
     );
 
     if (j < teachers.length - 1) {
       html = html.concat("<hr>");
     }
   });
-  return html
+  return html;
 }

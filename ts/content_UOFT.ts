@@ -15,7 +15,12 @@ tableBody.each((i: number, row: HTMLElement) => {
   namesArray.forEach((name, k) => {
     //Closure is used to preserve name index k for use in sendMessage callback
     (function (k) {
-      instructors.append(createNameSpan(i,k,name));
+      instructors.append(createNameSpan(i, k, name));
+      const instance = createTooltip(
+        `span#instructor_row${i}_name${k}`,
+        "Loading..."
+      )[0];
+
       chrome.runtime.sendMessage(
         {
           schoolIds: [
@@ -27,18 +32,14 @@ tableBody.each((i: number, row: HTMLElement) => {
           name,
         },
         (res: RMPResponse) => {
-          const success: boolean = res.success;
           const numFound = res.numFound;
           const docs: RMPTeacherData[] = res.docs;
 
           if (numFound != 0) {
-            const html = createTooltipEntriesHTML(docs)
-            createTooltip(`span#instructor_row${i}_name${k}`, html);
+            const html = createTooltipEntriesHTML(docs);
+            instance.setContent(html);
           } else {
-            createTooltip(
-              `span#instructor_row${i}_name${k}`,
-              `No Rate My Professor's Pages Found :(`
-            );
+            instance.setContent(`No Rate My Professor's Pages Found :(`);
           }
         }
       );

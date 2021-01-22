@@ -4,13 +4,24 @@
   "description": "View Rate My Professors rating directly in course browsers!",
   "version": "1.2.0",
   "background": {
-    "scripts": ["js/lib/jquery-3.5.1.slim.min.js","js/d.js", "js/background.js"],
+    "scripts": [
+      "js/lib/jquery-3.5.1.slim.min.js",
+      "js/d.js",
+      "js/background.js"
+    ],
     "persistent": false
   },
   "content_scripts": [
     {
       "matches": ["https://courses.students.ubc.ca/cs/*"],
-      "js": ["js/lib/jquery-3.5.1.slim.min.js", "js/content_ubc.js"]
+      "js": [
+        "js/lib/jquery-3.5.1.slim.min.js",
+        "js/lib/popper.min.js",
+        "js/lib/tippy-bundle.umd.min.js",
+        "js/d.js",
+        "js/helpers.js",
+        "js/content_ubc.js"
+      ]
     },
     {
       "matches": [
