@@ -19,7 +19,7 @@ nameTable.each((i: number, row: HTMLElement) => {
   }
 
   $(row).find("a").attr("id", `name${i}`);
-  const instance = createTooltip(`a#name${i}`, 'Loading...')[0];
+  const instance = createTooltip(`a#name${i}`, "Loading...")[0];
 
   chrome.runtime.sendMessage(
     { schoolIds: [getSchoolId()], name },
@@ -29,12 +29,12 @@ nameTable.each((i: number, row: HTMLElement) => {
       const docs: RMPTeacherData[] = res.docs;
 
       if (numFound != 0) {
-        const tooltipHTML = createTooltipEntriesHTML(docs);
+        const html = createTooltipEntriesHTML(docs);
         //@ts-ignore
-        instance.setContent(tooltipHTML)
+        instance.setContent(html);
       } else {
         //@ts-ignore
-        instance.setContent(`No Rate My Professor's Pages Found :(`)
+        instance.setContent(`No Rate My Professor's Pages Found :(`);
       }
     }
   );

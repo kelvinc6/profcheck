@@ -25,13 +25,13 @@ function createTooltipEntriesHTML(teachers: RMPTeacherData[]) {
       RMP_TEACHER_BASE_URL + teacher.pk_id
     }" target="_blank">RMP Page</a>`;
     html = html.concat(
-      `${firstName} ${lastName} </br> Department: ${department} </br> Rating: ${
-        rating ? rating : "N/A"
-      } </br> ${linkHTML}`
+      `<div><span>${firstName} ${lastName} </span></br><span>Department: ${department}</span></br><span>Rating: ${
+        rating ? `${rating} / 5` : "N/A"
+      } </span></br><span>${linkHTML}</span></div>`
     );
 
     if (j < teachers.length - 1) {
-      html = html.concat("<hr>");
+      html = html.concat(`<hr id="tooltipBreak">`);
     }
   });
   return html;
