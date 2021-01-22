@@ -2,7 +2,7 @@
 chrome.runtime.onInstalled.addListener(function () {
   updateTypos();
   chrome.alarms.create("updateTypos", {
-    periodInMinutes: 10,
+    periodInMinutes: 30,
   });
 });
 
@@ -25,7 +25,6 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
 
 //Get instructor information from RMP
 async function getInfo(instructorName, isUBCO, typos) {
-  //Check for typos (~125 milliseconds exec time)
   instructorName = typoCheck(instructorName, typos);
 
   //Create a fuzzy search query in case of typos
@@ -66,7 +65,7 @@ function createNameArray(instructorName, i) {
   return splitNameArray;
 }
 
-//Constructos a query to search for an instructor
+//Constructs a search query
 function queryConstructor(instructorName, isUBCO) {
   const firstNameArray = createNameArray(instructorName, 1);
   const lastNameArray = createNameArray(instructorName, 0);
@@ -93,12 +92,12 @@ function queryConstructor(instructorName, isUBCO) {
   return databaseURL;
 }
 
-//~125 milliseconds
 function typoCheck(instructorName, typos) {
   const hasTypo = typos.hasOwnProperty(instructorName);
   return hasTypo ? typos[instructorName] : instructorName;
 }
 
+//Updates local typos
 function updateTypos() {
   fetch("https://insidiousdata.github.io/data/typos.json")
     .then((res) => res.json())
@@ -109,7 +108,7 @@ function updateTypos() {
     )
     .catch((error) =>
       chrome.storage.local.set({ typos: {} }, function () {
-        console.log("Typos updated!");
+        console.log("Could not get typos!");
       })
     );
 }
