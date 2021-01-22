@@ -69,18 +69,20 @@ function createTippySingleton(tippys: Instance[]) {
 function createTooltipHTML(teachers: RMPTeacherData[]): string {
   let html = "";
   teachers.forEach((teacher, j) => {
-    const firstName = teacher.teacherfirstname_t;
-    const lastName = teacher.teacherlastname_t;
-    const school = teacher.schoolname_s;
-    const department = teacher.teacherdepartment_s;
-    const rating: number | undefined = teacher.averageratingscore_rf;
-    const numRatings = teacher.total_number_of_ratings_i;
-    const difficulty: number | undefined = teacher.averageeasyscore_rf;
+    const {
+      teacherfirstname_t: firstName,
+      teacherlastname_t: lastName,
+      schoolname_s: school,
+      teacherdepartment_s: department,
+      averageratingscore_rf: rating,
+      total_number_of_ratings_i: numRatings,
+      averageeasyscore_rf: difficulty,
+    } = teacher;
 
     html = html.concat(
       `<div><span><a id="tooltiplink" href="${
         RMP_TEACHER_BASE_URL + teacher.pk_id
-      }" target="_blank">${firstName} ${lastName}</a><span> (${numRatings} ratings)</span></span></br><span>School: ${school}</span></br><span>Department: ${department}</span></br><span>Rating: ${
+      }" target="_blank"><b>${firstName} ${lastName}</b></a><span> (${numRatings} ratings)</span></span></br><span>School: ${school}</span></br><span>Department: ${department}</span></br><span>Rating: ${
         rating ? `${rating} / 5` : "N/A"
       } </span></br><span>Difficulty: ${
         difficulty ? `${difficulty} / 5` : "N/A"
