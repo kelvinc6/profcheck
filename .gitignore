@@ -1,7 +1,3 @@
 package-lock.json
 node_modules
-js/content_ubc.js
-js/content_uoft.js
-js/background.js
-js/helpers.js
-js/d.js
+js/*

@@ -2,11 +2,12 @@
   "manifest_version": 2,
   "name": "ProfCheck",
   "description": "View Rate My Professors ratings directly in course browsers!",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "background": {
     "scripts": [
       "js/lib/jquery-3.5.1.slim.min.js",
       "js/d.js",
+      "js/constants.js",
       "js/background.js"
     ],
     "persistent": false
@@ -14,12 +15,12 @@
   "content_scripts": [
     {
       "matches": ["https://courses.students.ubc.ca/cs/*"],
-      "css": ["css/css_ubc.css"],
       "js": [
         "js/lib/jquery-3.5.1.slim.min.js",
         "js/lib/popper.min.js",
         "js/lib/tippy-bundle.umd.min.js",
         "js/d.js",
+        "js/constants.js",
         "js/helpers.js",
         "js/content_ubc.js"
       ]
@@ -33,6 +34,7 @@
         "js/lib/popper.min.js",
         "js/lib/tippy-bundle.umd.min.js",
         "js/d.js",
+        "js/constants.js",
         "js/helpers.js",
         "js/content_uoft.js"
       ]

@@ -1,3 +1,4 @@
+var shadowRoot = initializeTippyShadowRoot();
 const nameTable: JQuery = $("table[class=\\table] > tbody").children();
 
 nameTable.each((i: number, row: HTMLElement) => {
@@ -22,12 +23,12 @@ nameTable.each((i: number, row: HTMLElement) => {
       const docs: RMPTeacherData[] = res.docs;
 
       if (numFound != 0) {
-        const html = createTooltipEntriesHTML(docs);
+        const html = createTooltipHTML(docs);
         //@ts-ignore
         instance.setContent(html);
       } else {
         //@ts-ignore
-        instance.setContent(`No Rate My Professor's Pages Found :(`);
+        instance.setContent(`No Rate My Professors Pages Found :(`);
       }
     }
   );

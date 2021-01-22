@@ -1,3 +1,12 @@
+function initializeTippyShadowRoot() {
+  $(document.body).append('<div id="tippy-shadow"></div>');
+  var shadowRoot = document
+    .getElementById("tippy-shadow")
+    ?.attachShadow({ mode: "open" });
+  shadowRoot?.appendChild($(`style[data-tippy-stylesheet=""]`)[0]);
+  return shadowRoot;
+}
+
 function createNameSpan(rowIndex: number, nameIndex: number, name: string) {
   return jQuery.parseHTML(
     `<span id="instructor_row${rowIndex}_name${nameIndex}">${name}</span></br>`
@@ -7,14 +16,16 @@ function createNameSpan(rowIndex: number, nameIndex: number, name: string) {
 function createTooltip(selector: string, text: string) {
   //@ts-ignore
   return tippy(selector, {
+    //@ts-ignore
     content: text,
     allowHTML: true,
     interactive: true,
     placement: "right",
+    appendTo: shadowRoot,
   });
 }
 
-function createTooltipEntriesHTML(teachers: RMPTeacherData[]) {
+function createTooltipHTML(teachers: RMPTeacherData[]) {
   let html = "";
   teachers.forEach((teacher, j) => {
     const firstName = teacher.teacherfirstname_t;

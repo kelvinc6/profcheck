@@ -1,3 +1,4 @@
+var shadowRoot = initializeTippyShadowRoot();
 const tableBody: JQuery = $("tbody[role=alert]").children();
 
 //Iterate through each row of table
@@ -36,7 +37,7 @@ tableBody.each((i: number, row: HTMLElement) => {
           const docs: RMPTeacherData[] = res.docs;
 
           if (numFound != 0) {
-            const html = createTooltipEntriesHTML(docs);
+            const html = createTooltipHTML(docs);
             instance.setContent(html);
           } else {
             instance.setContent(`No Rate My Professor's Pages Found :(`);
