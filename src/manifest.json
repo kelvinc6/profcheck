@@ -1,0 +1,20 @@
+{
+  "manifest_version": 2,
+  "name": "ProfCheck",
+  "description": "View Rate My Professors ratings directly in course browsers!",
+  "version": "1.2.1",
+  "background": {
+    "scripts": ["background.js"],
+    "persistent": false
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://courses.students.ubc.ca/cs/*"],
+      "js": ["content_ubc.js"]
+    }
+  ],
+  "permissions": ["https://*.ratemyprofessors.com/*", "alarms", "storage"],
+  "icons": {
+
+  }
+}
