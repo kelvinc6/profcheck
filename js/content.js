@@ -33,7 +33,7 @@ table.each((i, elem) => {
    * Instructor name with the '(Coordinator)' string removed
    * @type {String}
    */
-  let instructorName = $(elem).find("a").text().replace("(Coordinator)", "");
+  let instructorName = $(elem).find('td > a').text().replace("(Coordinator)", "");
 
   //Break out of loop upon reaching a TA, as instructors are listed first
   if (isTA) {
