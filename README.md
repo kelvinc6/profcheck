@@ -8,10 +8,18 @@ Support for UBC Vancouver and UBC Okanagan campuses.
 
 ## Installation
 
+### Chrome Web Store
+
 https://chrome.google.com/webstore/detail/profcheck/iejcdmcgelpioejdpeoifnaemneihagc
+
+### Manual
+
+1. Clone this repository
+1. Enable *Developer Mode* in Chrome Extensions page
+2. Click *Load Unpacked*, and select the cloned repository
 
 ## Example
 
 ### CAPS 301:
 
-![example](https://i.imgur.com/lp7GWyl.png)
+![example](https://i.imgur.com/6HgKHsd.png)
