@@ -4,7 +4,8 @@
   "description": "View Rate My Professors rating directly in UBC's course browser!",
   "version": "1.0",
   "background": {
-    "scripts": ["jquery-3.5.1.slim.min.js", "background.js"]
+    "scripts": ["jquery-3.5.1.slim.min.js", "background.js"],
+    "persistent": false
   },
   "content_scripts": [
     {
@@ -13,7 +14,7 @@
     }
   ],
   "permissions": [
-    "https://solr-aws-elb-production.ratemyprofessors.com/*"
+    "https://*.ratemyprofessors.com/*"
   ],
   "icons": {
     "128": "icon128.png"
