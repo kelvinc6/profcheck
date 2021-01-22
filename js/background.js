@@ -88,6 +88,7 @@ async function getFormattedInstructorInfo(instructorName, isUBCO, typos) {
 function formatName(instructorName) {
   return instructorName
     .replace(", ", `~${FUZZY_CONST}%20`)
+    //TODO: Most likely remove hyphen seperating
     .replace("-", `~${FUZZY_CONST}%20`)
     .concat(`~${FUZZY_CONST}`)
     .toLowerCase();
@@ -102,7 +103,7 @@ function formatName(instructorName) {
 function queryConstructor(instructorName, isUBCO) {
   instructorName = formatName(instructorName);
   const schoolID = isUBCO ? "5436" : "1413";
-  const databaseURL = `https://solr-aws-elb-production.ratemyprofessors.com/solr/rmp/select/?spellcheck=false&fq=schoolid_s:${schoolID}&wt=json&defType=edismax&qf=teacherfirstname_t+teacherlastname_t&fl=pk_id+teacherfirstname_t+teacherlastname_t+total_number_of_ratings_i+averageratingscore_rf&q=${instructorName}&mm=2`;
+  const databaseURL = `https://solr-aws-elb-production.ratemyprofessors.com/solr/rmp/select/?spellcheck=false&fq=schoolid_s:${schoolID}&wt=json&qf=teacherfirstname_t+teacherlastname_t&fl=pk_id+teacherfirstname_t+teacherlastname_t+total_number_of_ratings_i+averageratingscore_rf&q=${instructorName}&mm=2`;
 
   return databaseURL;
 }
