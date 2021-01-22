@@ -3,7 +3,8 @@ const typos = {
     'ALINIAEIFARD, FARID': "ALINIAIEFARD, FARID",
     'RUED, THOMAS': "RUD, THOMAS",
     'O\'NEILL, ANGELA': "O\'NEILL, ANGIE",
-    'OTTO, SARAH': "OTTO,SALLY"
+    'OTTO, SARAH': "OTTO,SALLY",
+    "EVANS, WILLIAM": "EVANS, WILL"
 }
 
 const formatInstructorNames = string => {
@@ -32,12 +33,13 @@ let searched = []
 table.each((i, elem) => {
 
     const isTA = $(elem).has('td:contains("TA")').length ? true : false
-    const instructorName = $(elem).find("a").text()
+    let instructorName = $(elem).find("a").text()
 
     if (typos.hasOwnProperty(instructorName)) {
         instructorName = typos[instructorName]
     }
 
+    console.log(instructorName);
     //Break out of loop upon reaching a TA
     if (isTA || searched.includes(instructorName) || !instructorName) { return false }
 
