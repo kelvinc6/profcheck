@@ -1,26 +1,42 @@
+//Setups the alarm to periodically update the typos document on install
+chrome.runtime.onInstalled.addListener(function () {
+  updateTypos();
+  chrome.alarms.create("updateTypos", {
+    periodInMinutes: 10,
+  });
+});
+
+//Adding listener to typos updater
+chrome.alarms.onAlarm.addListener((alarm) => updateTypos());
+
 //Add listener for content script message
 chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
   const instructorName = request.instructorName;
   const isUBCO = request.isUBCO;
 
-  getInfo(instructorName, isUBCO).then((res) => sendResponse(res));
+  //Get stored typos for checking, then call getInfo
+  chrome.storage.local.get("typos", (storage) =>
+    getInfo(instructorName, isUBCO, storage.typos).then((res) =>
+      sendResponse(res)
+    )
+  );
   return true;
 });
 
 //Get instructor information from RMP
-async function getInfo(instructorName, isUBCO) {
+async function getInfo(instructorName, isUBCO, typos) {
   //Check for typos (~125 milliseconds exec time)
-  instructorName = await typoCheck(instructorName);
+  instructorName = typoCheck(instructorName, typos);
 
-  //If exact search doesn't work, try a fuzzy search
+  //Create a fuzzy search query in case of typos
   const url = queryConstructor(instructorName, isUBCO);
 
-  let json = await fetch(url).then((res) => res.json());
+  let responseJson = await fetch(url).then((res) => res.json());
   //There is a possibility of RMP having two entries of the same professor; we always take the first result, as
 
   //results are sorted by number of ratings
-  if (json.response.numFound != 0) {
-    const professorData = json.response.docs[0];
+  if (responseJson.response.numFound != 0) {
+    const professorData = responseJson.response.docs[0];
     const PROF_LINK = `https://www.ratemyprofessors.com/ShowRatings.jsp?tid=${professorData.pk_id}`;
     return {
       isSuccessful: true,
@@ -29,7 +45,6 @@ async function getInfo(instructorName, isUBCO) {
       link: PROF_LINK,
     };
   } else {
-
     return {
       isSuccessful: false,
       averageRatingScore: null,
@@ -79,10 +94,22 @@ function queryConstructor(instructorName, isUBCO) {
 }
 
 //~125 milliseconds
-async function typoCheck(instructorName) {
-  const typos = await fetch("https://insidiousdata.github.io/data/typos.json")
-    .then((res) => res.json())
-    .catch((err) => {});
+function typoCheck(instructorName, typos) {
   const hasTypo = typos.hasOwnProperty(instructorName);
   return hasTypo ? typos[instructorName] : instructorName;
+}
+
+function updateTypos() {
+  fetch("https://insidiousdata.github.io/data/typos.json")
+    .then((res) => res.json())
+    .then((typos) =>
+      chrome.storage.local.set({ typos }, function () {
+        console.log("Typos updated!");
+      })
+    )
+    .catch((error) =>
+      chrome.storage.local.set({ typos: {} }, function () {
+        console.log("Typos updated!");
+      })
+    );
 }

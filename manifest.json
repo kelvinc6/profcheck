@@ -13,7 +13,7 @@
       "js": ["js/jquery-3.5.1.slim.min.js", "js/content.js"]
     }
   ],
-  "permissions": ["https://*.ratemyprofessors.com/*"],
+  "permissions": ["https://*.ratemyprofessors.com/*", "alarms", "storage"],
   "icons": {
     "128": "icons/icon128.png"
   }
