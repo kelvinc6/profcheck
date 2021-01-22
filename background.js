@@ -1,67 +1,65 @@
-//Add listener for content message
+//Add listener for chrome message
 chrome.runtime.onMessage.addListener(
   function (request, sender, sendResponse) {
-    getRating(request.instructorName).then(res => sendResponse(res))
+    const firstName = getAndFormatFirstName(request.instructorName)
+    const lastName = getAndFormatLastName(request.instructorName);
+
+    getInfo(firstName, lastName).then(res => sendResponse(res))
     return true;
   }
 );
 
-async function getRating(name) {
+async function getInfo(firstName, lastName) {
+  const queryURL = `https://solr-aws-elb-production.ratemyprofessors.com/solr/rmp/select/?wt=json&q=schoolid_s%3A1413+AND
++(teacherlastname_t:${lastName}+AND+teacherfirstname_t:${firstName})&sort=teacherlastname_t+asc&fl=pk_id+teacherfirstname_t+teacherlastname_t+total_number_of_ratings_i+averageratingscore_rf+schoolid_s+rating_class`
 
-  const instructorName = await formatInstructorName(name)
+  const backupQueryURL = `https://solr-aws-elb-production.ratemyprofessors.com/solr/rmp/select/?wt=json&q=schoolid_s%3A1413+AND
+  +((teacherlastname_t:${lastName}+AND+teacherfirstname_t:${firstName}~)+OR+(teacherlastname_t:${lastName}~+AND+teacherfirstname_t:${firstName}))&sort=teacherlastname_t+asc&fl=pk_id+teacherfirstname_t+teacherlastname_t+total_number_of_ratings_i+averageratingscore_rf+schoolid_s+rating_class`
 
-  console.log(instructorName)
+  const json = await fetch(queryURL).then(res => res.json())
 
-  const URL = "https://www.ratemyprofessors.com"
-
-  const searchQueryURL = await `/search.jsp?queryBy=teacherName&schoolName=university+of+british+columbia&queryoption=HEADER&query=${instructorName}&facetSearch=true`
-
-  const searchQueryHTML = await fetch(URL + searchQueryURL).then(res => res.text())
-
-  //These are the results obtained from performing a search for the given professor
-  //Assumes each professor has a unique name
-  const listings = $(searchQueryHTML).find(".listings").children()
-
-  //Return if there are no listings for given professor
-  if (!listings.length) {
+  if (json.response.numFound == 1) {
+    const professorData = json.response.docs[0]
+    const link = `https://www.ratemyprofessors.com/ShowRatings.jsp?tid=${professorData.pk_id}`
     return {
-      successful: false,
-      rating: null,
-      link: null
+      isSuccessful: true,
+      averageRatingScore: professorData.averageratingscore_rf,
+      numRatings: professorData.total_number_of_ratings_i,
+      link: link
+    }
+  } else {
+    json = await fetch(backupQueryURL).then(res => res.json())
+    if (json.response.numFound == 1) {
+      const professorData = json.response.docs[0]
+      const link = `https://www.ratemyprofessors.com/ShowRatings.jsp?tid=${professorData.pk_id}`
+      return {
+        isSuccessful: true,
+        averageRatingScore: professorData.averageratingscore_rf,
+        numRatings: professorData.total_number_of_ratings_i,
+        link: link
+      }
+    } else {
+      return {
+        isSuccessful: false,
+        averageRatingScore: null,
+        numRatings: null,
+        link: null
+      }
     }
   }
-
-  //Link to the professors RMP page
-  const link = await $(listings).find("a").attr("href")
-
-  //Here we fetch the actual page of the professor
-  const professorQueryURL = URL + link
-  const professorQueryHTML = await fetch(professorQueryURL).then(res => res.text())
-
-  //Get the rating of a professor at this class
-  const rating = $(professorQueryHTML).find("div.RatingValue__Numerator-qw8sqy-2.liyUjw").text()
-
-  //Get number of ratings
-  const numRatingsString = $(professorQueryHTML).find('a[href="#ratingsList"]').text()
-
-  return {
-    successful: true,
-    rating: rating,
-    numRatingsString: numRatingsString,
-    link: professorQueryURL
-  }
 }
 
-async function formatInstructorName(name) {
-  const formattedInstructorName = name.replace("(Coordinator)", "")
-
-  const URL = `http://localhost:3001/api/typos/${formattedInstructorName}`
-
-  const json = await fetch(URL)
-  .then(res => res.json())
-  .catch(error => {
-    console.log('There is no typo stored in the database')
-    return name
-  })
-  return json.searchName ? json.searchName : name
+function getAndFormatFirstName(instructorName) {
+  const nameArray = instructorName.split(', ')
+  const firstNameLowerCase = nameArray[1].split(' ')[0].toLowerCase()
+  return firstNameLowerCase.charAt(0).toUpperCase() + firstNameLowerCase.slice(1)
 }
+
+function getAndFormatLastName(instructorName) {
+  const nameArray = instructorName.split(', ')
+  const lastNameLowerCase = nameArray[0].split(' ')[1] ? nameArray[0].split(' ')[1].toLowerCase() : nameArray[0].split(' ')[0].toLowerCase()
+  return lastNameLowerCase.charAt(0).toUpperCase() + lastNameLowerCase.slice(1)
+}
+
+
+

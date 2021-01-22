@@ -1,26 +1,16 @@
-//Used for storing typos
-const typos = {
-    'ALINIAEIFARD, FARID': "ALINIAIEFARD, FARID",
-    'RUED, THOMAS': "RUD, THOMAS",
-    'O\'NEILL, ANGELA': "O\'NEILL, ANGIE",
-    'OTTO, SARAH': "OTTO,SALLY",
-    "EVANS, WILLIAM": "EVANS, WILL"
-}
-
-
 // const instructorRow = $("table[class=\\table] > tbody > tr > td")
 // let instructorName = formatInstructorNames(instructorRow.eq(1).text())
 
+//The table with class "table" has instrucors and TA names
 const table = $('table[class=\\table] > tbody').children()
 
-//Set up correct HTML elements
+//Set up correct HTML elements to fill in
 table.each((i, elem) => {
-    
-    const ratingHTML = `<td style="min-width:10em" id="rating${i}"></td>`
-    const numRatingsHTML = `<td style="min-width:10em" id="numRatings${i}"></td>`
-    const linkHTML = `<td style="min-width:10em"><a id="link${i}" target="_blank"></a></td>`
+    const ratingElement = `<td style="min-width:10em" id="rating${i}"></td>`
+    const numRatingsElement = `<td style="min-width:10em" id="numRatings${i}"></td>`
+    const linkElement = `<td style="min-width:10em"><a id="link${i}" target="_blank"></a></td>`
 
-    $(elem).append(ratingHTML + numRatingsHTML + linkHTML)
+    $(elem).append(ratingElement + numRatingsElement + linkElement)
 })
 
 //Array of searched instructors
@@ -28,16 +18,18 @@ let searched = []
 
 //Iterate through all the instructors
 table.each((i, elem) => {
-
     const isTA = $(elem).has('td:contains("TA")').length ? true : false
-    let instructorName = $(elem).find("a").text()
+    let instructorName = $(elem).find("a").text().replace("(Coordinator)", "")
 
-    // if (typos.hasOwnProperty(instructorName)) {
-    //     instructorName = typos[instructorName]
-    // }
+    //Break out of loop upon reaching a TA, as instructors are listed first
+    if (isTA) {
+        return false
+    }
 
-    //Break out of loop upon reaching a TA
-    if (isTA || searched.includes(instructorName) || !instructorName) { return false }
+    //Continue if instructor has been seen before, or if no name present
+    if (searched.includes(instructorName) || !instructorName) {
+        return
+    }
 
     //Keep track of instructors iterated over
     searched.push(instructorName)
@@ -45,28 +37,25 @@ table.each((i, elem) => {
     //Loading indicator
     $(`#rating${i}`).text("Loading...")
 
-    chrome.runtime.sendMessage({ instructorName: instructorName }, function (res) {
-        const isSuccessful = res.successful
-        const rating = res.rating
-        const link = res.link
-        const numRatingsString = res.numRatingsString
-
-        console.log(isSuccessful)
+    chrome.runtime.sendMessage({ instructorName: instructorName }, function (result) {
+        const isSuccessful = result.isSuccessful
+        const rating = result.averageRatingScore
+        const link = result.link
+        const numRatings= result.numRatings
 
         if (isSuccessful) {
             //Hide loading indicator
             $('.loader').hide()
 
             $(`#rating${i}`).text(`Rating: ${rating} / 5`)
-            $(`#numRatings${i}`).text(`(${numRatingsString})`)
+            $(`#numRatings${i}`).text(`(${numRatings} ratings)`)
             $(`#link${i}`).attr("href", link).text(`RMP Page`)
         } else {
-            $(`#numRatings${i}`).hide()
-            $(`#link${i}`).hide()
-            
             //Indicate instructor could not be found
             $(`#rating${i}`).text("Error")
         }
     })
 
 })
+
+  
