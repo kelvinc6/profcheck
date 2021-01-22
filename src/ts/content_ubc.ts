@@ -53,7 +53,7 @@ nameTable.each((i: number, row: HTMLElement) => {
   );
 });
 
-createTippySingleton(tippyInstances);
+// createTippySingleton(tippyInstances);
 
 /**
  * Get schoolid for Vancouver or Okanagan campus

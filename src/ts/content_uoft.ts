@@ -72,4 +72,4 @@ tableBody.each((i: number, row: HTMLElement) => {
   });
 });
 
-createTippySingleton(tippyInstances);
+// createTippySingleton(tippyInstances);
