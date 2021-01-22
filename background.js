@@ -7,9 +7,8 @@ chrome.runtime.onMessage.addListener(
 );
 
 async function getRating(instructorName) {
-
   //Searching with an empty string results in random results of professors
-  if (instructorName == "") {
+  if (!instructorName) {
     return {
       successful: false,
       rating: null,
@@ -26,6 +25,15 @@ async function getRating(instructorName) {
   //Assumes each professor has a unique name
   const listings = $(searchQueryHTML).find(".listings").children()
 
+  //Return if there are no listings for given professor
+  if (!listings.length) {
+    return {
+      successful: false,
+      rating: null,
+      link: null
+    }
+  }
+
   //Link to the professors RMP page
   const link = await $(listings).find("a").attr("href")
 
@@ -36,9 +44,13 @@ async function getRating(instructorName) {
   //Get the rating of a professor at this class
   const rating = $(professorQueryHTML).find("div.RatingValue__Numerator-qw8sqy-2.liyUjw").text()
 
+  //Get number of ratings
+  const numRatingsString = $(professorQueryHTML).find('a[href="#ratingsList"]').text()
+
   return {
     successful: true,
     rating: rating,
+    numRatingsString: numRatingsString,
     link: professorQueryURL
   }
 }
