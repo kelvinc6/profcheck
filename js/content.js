@@ -24,10 +24,10 @@ let searched = [];
 
 table.each((i, elem) => {
   /**
-   * Whether the current row is a TA
+   * Whether the first element of a row indicates a TA
    * @type {boolean}
    */
-  const isTA = !!$(elem).has('td:contains("TA:")').length;
+  const isTA = $(elem).children().first().text().includes('TA:')
 
   /**
    * Instructor name with the '(Coordinator)' string removed
