@@ -1,4 +1,11 @@
 /**
+ * Represents degree of fuzziness used in the search query
+ * @constant
+ * @type {number} 
+ */
+const FUZZY_CONST = 0.6;
+
+/**
  * Gets the current up-to-date typos.json file from GitHub on installation
  * @listens onInstalled
  */
@@ -57,8 +64,6 @@ async function getFormattedInstructorInfo(instructorName, isUBCO, typos) {
 
   let responseJson = await fetch(url).then((res) => res.json());
 
-  console.log(responseJson.responseHeader.QTime)
-
   //We always take the first result
   if (responseJson.response.numFound != 0) {
     const professorData = responseJson.response.docs[0];
@@ -82,18 +87,13 @@ async function getFormattedInstructorInfo(instructorName, isUBCO, typos) {
 /**
  * Formats instructor name for use in search query
  * @param {string} instructorName
- * @param {number} FUZZY_CONST - Degree of fuzziness of search
  */
-function formatName(instructorName, FUZZY_CONST) {
+function formatName(instructorName) {
   return instructorName
     .replace(", ", `~${FUZZY_CONST}%20`)
     .replace("-", `~${FUZZY_CONST}%20`)
     .concat(`~${FUZZY_CONST}`)
     .toLowerCase();
-}
-
-function formatName(instructorName) {
-  return instructorName.replace(', ','~%20').concat('~').toLowerCase()
 }
 
 /**
@@ -103,9 +103,7 @@ function formatName(instructorName) {
  * @param {boolean} isUBCO
  */
 function queryConstructor(instructorName, isUBCO) {
-  const FUZZY_CONST = 0.6;
-
-  instructorName = formatName(instructorName, FUZZY_CONST);
+  instructorName = formatName(instructorName);
 
   const schoolID = isUBCO ? "5436" : "1413";
   //Includes a isFuzzy param for reference purposes
