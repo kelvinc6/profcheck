@@ -3,7 +3,6 @@ import {
   createTooltipHTML,
   createTooltipNoResultsHTML,
   createTooltipErrorHTML,
-  createTippySingleton,
 } from "./helpers";
 import { SchoolId } from "./constants";
 import { RMPResponse, RMPTeacherData } from "./d";
@@ -52,8 +51,6 @@ nameTable.each((i: number, row: HTMLElement) => {
     }
   );
 });
-
-// createTippySingleton(tippyInstances);
 
 /**
  * Get schoolid for Vancouver or Okanagan campus

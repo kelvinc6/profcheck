@@ -5,7 +5,6 @@ import {
   createTooltipHTML,
   createTooltipNoResultsHTML,
   createTooltipErrorHTML,
-  createTippySingleton,
 } from "./helpers";
 import { SchoolId } from "./constants";
 import { RMPTeacherData, RMPResponse } from "./d";
@@ -71,5 +70,3 @@ tableBody.each((i: number, row: HTMLElement) => {
     })(k);
   });
 });
-
-// createTippySingleton(tippyInstances);
