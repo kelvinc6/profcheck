@@ -1,9 +1,3 @@
-const typos = {
-  "BROWN, LINDSAY": "ROGERS, LINDSAY",
-  "O'NEILL, ANGELA": "O'NEILL, ANGIE",
-  "EVANS, WILLIAM": "EVANS, WILL"
-};
-
 //The table with class "table" has instrucors and TA names
 const table = $("table[class=\\table] > tbody").children();
 
@@ -36,11 +30,6 @@ table.each((i, elem) => {
   } else {
     //Keep track of instructors iterated over
     searched.push(instructorName);
-  }
-
-  //Scuffed typo checking
-  if (typos.hasOwnProperty(instructorName)) {
-    instructorName = typos[instructorName];
   }
 
   //Loading indicator
