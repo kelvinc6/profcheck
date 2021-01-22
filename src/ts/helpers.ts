@@ -1,5 +1,6 @@
-import tippy from "tippy.js";
+import tippy, { createSingleton, Instance, Tippy } from "tippy.js";
 import "tippy.js/dist/tippy.css";
+import "../css/styles.css";
 import "tippy.js/animations/shift-toward-subtle.css";
 
 import { RMP_TEACHER_BASE_URL, RMP_ADD_TEACHER_URL } from "./constants";
@@ -15,10 +16,28 @@ function createNameSpan(rowIndex: number, nameIndex: number, name: string) {
 function createTooltip(selector: string, text: string) {
   return tippy(selector, {
     content: text,
+    theme: "custom",
     allowHTML: true,
     interactive: true,
+    offset: [0, 15],
     placement: "right",
     animation: "shift-toward-subtle",
+  });
+}
+
+function createTippySingleton(tippys: Instance[]) {
+  createSingleton(tippys, {
+    interactiveBorder: 32,
+    moveTransition: "transform 0.2s fade",
+    overrides: [
+      "allowHTML",
+      "interactive",
+      "interactiveBorder",
+      "placement",
+      "animation",
+      "theme",
+      "offset",
+    ],
   });
 }
 
@@ -56,4 +75,5 @@ export {
   createTooltip,
   createTooltipHTML,
   createTooltipNoResultsHTML,
+  createTippySingleton,
 };

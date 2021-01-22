@@ -7,3 +7,8 @@
   border-style: inset !important;
   border-width: 1px !important;
 }
+
+.tippy-box[data-theme~="custom"] {
+  background-color: #2d3444f6;
+  color: rgba(250, 250, 250, 0.938);
+}

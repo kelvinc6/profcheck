@@ -1,15 +1,18 @@
 var $ = require("jquery");
+import tippy, { Instance } from "tippy.js";
 import {
   createNameSpan,
   createTooltip,
   createTooltipHTML,
   createTooltipNoResultsHTML,
+  createTippySingleton,
 } from "./helpers";
-import { RMP_ADD_TEACHER_URL, SchoolId } from "./constants";
+import { SchoolId } from "./constants";
 import { RMPTeacherData, RMPResponse } from "./d";
-import "../css/tooltip_break.css";
+import "../css/styles.css";
 
 const tableBody: JQuery = $("tbody[role=alert]").children();
+let tippyInstances: Instance[] = [];
 
 //Iterate through each row of table
 tableBody.each((i: number, row: HTMLElement) => {
@@ -31,6 +34,8 @@ tableBody.each((i: number, row: HTMLElement) => {
         `span#instructor_row${i}_name${k}`,
         "Loading..."
       )[0];
+
+      tippyInstances.push(instance);
 
       chrome.runtime.sendMessage(
         {
@@ -57,3 +62,5 @@ tableBody.each((i: number, row: HTMLElement) => {
     })(k);
   });
 });
+
+createTippySingleton(tippyInstances);
