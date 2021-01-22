@@ -1,6 +1,6 @@
 # ProfCheck
 
-An extension to find the instructor name(s) for a course on a school's course explorer, and displays their rating as well as their RMP link directly in the page.
+An extension to find the instructor name(s) for a course on a school's course explorer, and displays their rating as well as their Rate My Professors link directly in the page.
 
 This extension is fast and up-to-date, as it queries the Rate My Professors database instead of web scraping.
 
