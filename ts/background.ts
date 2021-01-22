@@ -3,17 +3,6 @@ chrome.runtime.onInstalled.addListener(function (details) {
   chrome.alarms.create("updateTypos", {
     periodInMinutes: 30,
   });
-
-  //REMOVE AFTER UPDATE
-  if (details.reason === "install") {
-    alert(
-      `ProfCheck now uses tooltips! Hover over a professor's name to see Rate My Professors information!`
-    );
-  } else if (details.reason === "update") {
-    alert(
-      `ProfCheck now uses tooltips! Hover over a professor's name to see Rate My Professors information!`
-    );
-  }
 });
 
 chrome.alarms.onAlarm.addListener(() => updateTypos());
