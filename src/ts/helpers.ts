@@ -42,7 +42,7 @@ function createTooltip(selector: string, html: string) {
  */
 function createTippySingleton(tippys: Instance[]) {
   createSingleton(tippys, {
-    interactiveBorder: 32,
+    interactiveBorder: 24,
     moveTransition: "transform 0.2s fade",
     overrides: [
       "allowHTML",
