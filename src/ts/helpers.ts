@@ -24,10 +24,10 @@ function createNameSpan(rowIndex: number, nameIndex: number, name: string) {
  * @param selector
  * @param html
  */
-function createTooltip(selector: string, html: string) {
+function createTippyInstance(selector: string, html: string) {
   return tippy(selector, {
     content: html,
-    theme: "custom",
+    theme: "dark",
     allowHTML: true,
     interactive: true,
     offset: [0, 15],
@@ -39,6 +39,7 @@ function createTooltip(selector: string, html: string) {
 /**
  * Combines all Tippy instances using the singleton pattern
  * @param tippys
+ * @deprecated
  */
 function createTippySingleton(tippys: Instance[]) {
   createSingleton(tippys, {
@@ -101,7 +102,7 @@ function createTooltipErrorHTML() {
 
 export {
   createNameSpan,
-  createTooltip,
+  createTippyInstance,
   createTooltipHTML,
   createTooltipNoResultsHTML,
   createTooltipErrorHTML,

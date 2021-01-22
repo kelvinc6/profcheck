@@ -1,5 +1,5 @@
 import {
-  createTooltip,
+  createTippyInstance,
   createTooltipHTML,
   createTooltipNoResultsHTML,
   createTooltipErrorHTML,
@@ -29,7 +29,7 @@ nameTable.each((i: number, row: HTMLElement) => {
    * Add id to each name for Tippy attachment
    */
   $(row).find("a").attr("id", `name${i}`);
-  const instance = createTooltip(`a#name${i}`, "Loading...")[0];
+  const instance = createTippyInstance(`a#name${i}`, "Loading...")[0];
 
   tippyInstances.push(instance);
 

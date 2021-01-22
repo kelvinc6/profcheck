@@ -14,9 +14,8 @@ chrome.runtime.onInstalled.addListener(() => {
   chrome.alarms.create("updateTypos", {
     periodInMinutes: 30,
   });
+  chrome.alarms.onAlarm.addListener(() => updateTypos());
 });
-
-chrome.alarms.onAlarm.addListener(() => updateTypos());
 
 /**
  * Create listener for content script message
@@ -95,7 +94,7 @@ function queryConstructor(school: SchoolId, name: string) {
 /**
  * Creates a Solr search URL to Rate My Professor's database
  * @param query - search query
- * @param schoolid - array of school ids' to search
+ * @param schoolid - array of school ids to search
  * @param mm - Solr minimum should match
  */
 function urlConstructor(query: string, schoolIdArray: SchoolId[]) {

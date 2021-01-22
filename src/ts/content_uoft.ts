@@ -1,7 +1,7 @@
 import { Instance } from "tippy.js";
 import {
   createNameSpan,
-  createTooltip,
+  createTippyInstance,
   createTooltipHTML,
   createTooltipNoResultsHTML,
   createTooltipErrorHTML,
@@ -35,7 +35,7 @@ tableBody.each((i: number, row: HTMLElement) => {
      */
     (function (k) {
       instructors.append(createNameSpan(i, k, name));
-      const instance = createTooltip(
+      const instance = createTippyInstance(
         `span#instructor_row${i}_name${k}`,
         "Loading..."
       )[0];
