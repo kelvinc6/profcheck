@@ -35,12 +35,12 @@ async function getInfo(instructorName) {
     }
   }
 
-return {
-  isSuccessful: false,
-  averageRatingScore: null,
-  numRatings: null,
-  link: null
-}
+  return {
+    isSuccessful: false,
+    averageRatingScore: null,
+    numRatings: null,
+    link: null
+  }
 
 
 function getAndFormatFirstNameArray(instructorName) {
@@ -64,7 +64,7 @@ function getAndFormatLastNameArray(instructorName) {
 }
 
 function queryConstructor(instructorName) {
-  
+
   const firstNameArray = getAndFormatFirstNameArray(instructorName)
   const lastNameArray = getAndFormatLastNameArray(instructorName)
   let queryBegin = `https://solr-aws-elb-production.ratemyprofessors.com/solr/rmp/select/?wt=json&q=schoolid_s%3A1413+AND+(`

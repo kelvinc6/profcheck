@@ -5,7 +5,6 @@ const typos = {
     'BROWN, LINDSAY': 'ROGERS, LINDSAY'
 }
 
-
 //The table with class "table" has instrucors and TA names
 const table = $('table[class=\\table] > tbody').children()
 
@@ -23,7 +22,7 @@ let searched = []
 
 //Iterate through all the instructors
 table.each((i, elem) => {
-    const isTA = $(elem).has('td:contains("TA")').length ? true : false
+    const isTA = $(elem).has('td:contains("TA:")').length ? true : false
     let instructorName = $(elem).find("a").text().replace("(Coordinator)", "")
 
     //Break out of loop upon reaching a TA, as instructors are listed first
