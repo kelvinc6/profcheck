@@ -86,12 +86,28 @@ async function getFormattedInstructorInfo(instructorName, isUBCO, typos) {
  * @param {string} instructorName
  */
 function formatName(instructorName) {
+  instructorName = splitName(instructorName).toString();
   return instructorName
-    .replace(", ", `~${FUZZY_CONST}%20`)
-    //TODO: Most likely remove hyphen seperating
-    .replace("-", `~${FUZZY_CONST}%20`)
+    .replace(/,/g, `~${FUZZY_CONST}%20`)
     .concat(`~${FUZZY_CONST}`)
     .toLowerCase();
+}
+
+/**
+ * Returns name array of a name with hyphenated names split and appended to the array
+ * @param {string} instructorName
+ * @returns {string[]}
+ */
+function splitName(instructorName) {
+  var nameArray = instructorName.split(/[\s,]+/);
+  for (i = 0; i < nameArray.length; i++) {
+    const name = nameArray[i];
+    if (name.includes("-")) {
+      const hyphenSplitArray = name.split("-");
+      nameArray = nameArray.concat(hyphenSplitArray);
+    }
+  }
+  return nameArray;
 }
 
 /**
