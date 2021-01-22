@@ -16,7 +16,7 @@ async function getInfo(firstName, lastName) {
   const backupQueryURL = `https://solr-aws-elb-production.ratemyprofessors.com/solr/rmp/select/?wt=json&q=schoolid_s%3A1413+AND
   +((teacherlastname_t:${lastName}+AND+teacherfirstname_t:${firstName}~)+OR+(teacherlastname_t:${lastName}~+AND+teacherfirstname_t:${firstName}))&sort=teacherlastname_t+asc&fl=pk_id+teacherfirstname_t+teacherlastname_t+total_number_of_ratings_i+averageratingscore_rf+schoolid_s+rating_class`
 
-  const json = await fetch(queryURL).then(res => res.json())
+  let json = await fetch(queryURL).then(res => res.json())
 
   if (json.response.numFound == 1) {
     const professorData = json.response.docs[0]
@@ -29,6 +29,9 @@ async function getInfo(firstName, lastName) {
     }
   } else {
     json = await fetch(backupQueryURL).then(res => res.json())
+
+    console.log(json)
+
     if (json.response.numFound == 1) {
       const professorData = json.response.docs[0]
       const link = `https://www.ratemyprofessors.com/ShowRatings.jsp?tid=${professorData.pk_id}`

@@ -47,12 +47,12 @@ table.each((i, elem) => {
             //Hide loading indicator
             $('.loader').hide()
 
-            $(`#rating${i}`).text(`Rating: ${rating} / 5`)
+            $(`#rating${i}`).text(rating ? `Rating: ${rating} / 5` : 'N/A')
             $(`#numRatings${i}`).text(`(${numRatings} ratings)`)
             $(`#link${i}`).attr("href", link).text(`RMP Page`)
         } else {
             //Indicate instructor could not be found
-            $(`#rating${i}`).text("Error")
+            $(`#rating${i}`).text("No RMP Page")
         }
     })
 
