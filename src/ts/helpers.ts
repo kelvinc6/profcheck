@@ -78,9 +78,9 @@ function createTooltipHTML(teachers: RMPTeacherData[]): string {
     const difficulty: number | undefined = teacher.averageeasyscore_rf;
 
     html = html.concat(
-      `<div><span><a style="color:DeepSkyBlue;" href="${
+      `<div><span><a id="tooltiplink" href="${
         RMP_TEACHER_BASE_URL + teacher.pk_id
-      }" target="_blank">${firstName} ${lastName}</a><span> (${numRatings} Ratings)</span></span></br><span>School: ${school}</span></br><span>Department: ${department}</span></br><span>Rating: ${
+      }" target="_blank">${firstName} ${lastName}</a><span> (${numRatings} ratings)</span></span></br><span>School: ${school}</span></br><span>Department: ${department}</span></br><span>Rating: ${
         rating ? `${rating} / 5` : "N/A"
       } </span></br><span>Difficulty: ${
         difficulty ? `${difficulty} / 5` : "N/A"
@@ -101,7 +101,7 @@ function createTooltipHTML(teachers: RMPTeacherData[]): string {
  * Create tooltip HTML when search failed
  */
 function createTooltipNoResultsHTML(): string {
-  return `<span>No Rate My Professors Pages Found :(</span></br><a style="color:DeepSkyBlue;" href="${RMP_ADD_TEACHER_URL}" target="_blank">Add RMP Page</a>`;
+  return `<span>No Rate My Professors Pages Found :(</span></br><a id="tooltiplink" href="${RMP_ADD_TEACHER_URL}" target="_blank">Add RMP Page</a>`;
 }
 
 /**

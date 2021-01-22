@@ -9,6 +9,15 @@
   width: 96%;
 }
 
+#tooltiplink {
+  color: DeepSkyBlue !important;
+  text-decoration: initial !important;
+}
+
+#tooltiplink:hover {
+  text-decoration: underline !important;
+}
+
 .tippy-box[data-theme~="dark"] {
   background-color: hsla(215, 15%, 25%, 0.97);
   color: hsla(50, 100%, 96%, 0.95);
