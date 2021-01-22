@@ -6,7 +6,10 @@ import {
 } from "./constants";
 import { Typos, RMPResponse } from "./d";
 
-chrome.runtime.onInstalled.addListener(function (details) {
+/**
+ * Create a typo update alarm on installation
+ */
+chrome.runtime.onInstalled.addListener(() => {
   updateTypos();
   chrome.alarms.create("updateTypos", {
     periodInMinutes: 30,
@@ -15,6 +18,9 @@ chrome.runtime.onInstalled.addListener(function (details) {
 
 chrome.alarms.onAlarm.addListener(() => updateTypos());
 
+/**
+ * Create listener for content script message
+ */
 chrome.runtime.onMessage.addListener(function (req, sender, sendResponse) {
   const schoolIds: SchoolId[] = req.schoolIds;
   let name = req.name;
@@ -29,6 +35,10 @@ chrome.runtime.onMessage.addListener(function (req, sender, sendResponse) {
   return true;
 });
 
+/**
+ * Get response JSON from RMP query url
+ * @param url - query url
+ */
 async function getRMPResponse(url: string): Promise<RMPResponse> {
   return fetch(url)
     .then((res) => res.json())
@@ -54,7 +64,9 @@ async function getRMPResponse(url: string): Promise<RMPResponse> {
 }
 
 /**
- * Creates an Apache Solr search query depending on school
+ * Create an Apache Solr query depending on school
+ * @param school -
+ * @param name
  */
 function queryConstructor(school: SchoolId, name: string) {
   switch (school) {
@@ -103,6 +115,8 @@ function urlConstructor(query: string, schoolIdArray: SchoolId[]) {
  * Check's a name against an set of key-value pairs consisting of an
  * incorrect spelling and the correct spelling, and returns the correct
  * spelling if found
+ * @param name
+ * @param typos
  */
 function typoCheck(name: string, typos: Typos): string {
   return typos.hasOwnProperty(name) ? typos[name] : name;
@@ -128,6 +142,7 @@ function updateTypos() {
 
 /**
  * Returns name array of a name with hyphenated names split and appended to the array
+ * @param instructorName
  */
 function splitName(instructorName: string): string[] {
   var nameArray = instructorName.split(/[\s,]+/);

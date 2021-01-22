@@ -1,16 +1,18 @@
-var $ = require("jquery");
 import {
   createTooltip,
   createTooltipHTML,
   createTooltipNoResultsHTML,
+  createTooltipErrorHTML,
   createTippySingleton,
 } from "./helpers";
 import { SchoolId } from "./constants";
 import { RMPResponse, RMPTeacherData } from "./d";
+import { Instance } from "tippy.js";
 import "../css/styles.css";
-import { Instance, Tippy } from "tippy.js";
+import $ from "jquery";
 
 const nameTable: JQuery = $("table[class=\\table] > tbody").children();
+
 let tippyInstances: Instance[] = [];
 
 nameTable.each((i: number, row: HTMLElement) => {
@@ -24,23 +26,27 @@ nameTable.each((i: number, row: HTMLElement) => {
     return false;
   }
 
+  /**
+   * Add id to each name for Tippy attachment
+   */
   $(row).find("a").attr("id", `name${i}`);
   const instance = createTooltip(`a#name${i}`, "Loading...")[0];
+
   tippyInstances.push(instance);
 
   chrome.runtime.sendMessage(
     { schoolIds: [getSchoolId()], name },
     (res: RMPResponse) => {
-      const success = res.success;
       const numFound = res.numFound;
       const docs: RMPTeacherData[] = res.docs;
+      const error: Error | undefined = res.error;
 
       if (numFound != 0) {
         const html = createTooltipHTML(docs);
-        //@ts-ignore
         instance.setContent(html);
+      } else if (error) {
+        instance.setContent(createTooltipErrorHTML());
       } else {
-        //@ts-ignore
         instance.setContent(createTooltipNoResultsHTML());
       }
     }
@@ -49,6 +55,9 @@ nameTable.each((i: number, row: HTMLElement) => {
 
 createTippySingleton(tippyInstances);
 
+/**
+ * Get schoolid for Vancouver or Okanagan campus
+ */
 function getSchoolId(): SchoolId {
   if ($(".ubc7-campus").attr("id") === "ubc7-okanagan-campus") {
     return SchoolId.UBC_OKANAGAN;

@@ -1,5 +1,7 @@
 const path = require("path");
 const CopyPlugin = require("copy-webpack-plugin");
+const BundleAnalyzerPlugin = require("webpack-bundle-analyzer")
+  .BundleAnalyzerPlugin;
 
 module.exports = {
   entry: {
@@ -30,6 +32,7 @@ module.exports = {
         { from: "./src/img/icon128.png" },
       ],
     }),
+    new BundleAnalyzerPlugin(),
   ],
   output: {
     filename: "[name].js",

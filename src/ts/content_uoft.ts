@@ -1,20 +1,21 @@
-var $ = require("jquery");
-import tippy, { Instance } from "tippy.js";
+import { Instance } from "tippy.js";
 import {
   createNameSpan,
   createTooltip,
   createTooltipHTML,
   createTooltipNoResultsHTML,
+  createTooltipErrorHTML,
   createTippySingleton,
 } from "./helpers";
 import { SchoolId } from "./constants";
 import { RMPTeacherData, RMPResponse } from "./d";
 import "../css/styles.css";
+import $ from "jquery";
 
 const tableBody: JQuery = $("tbody[role=alert]").children();
+
 let tippyInstances: Instance[] = [];
 
-//Iterate through each row of table
 tableBody.each((i: number, row: HTMLElement) => {
   const namesArray: string[] = $(row)
     .find(`span[id^='u263_line']`)
@@ -23,11 +24,16 @@ tableBody.each((i: number, row: HTMLElement) => {
     .split("<br>");
   namesArray.pop();
 
+  /**
+   * Remove plain text names in row to replace with spans
+   */
   const instructors: JQuery = $(row).find(`div[id^='u263_line']`);
   instructors.empty();
 
   namesArray.forEach((name, k) => {
-    //Closure is used to preserve name index k for use in sendMessage callback
+    /**
+     * Closure is used to preserve name index k for use in sendMessage callback
+     */
     (function (k) {
       instructors.append(createNameSpan(i, k, name));
       const instance = createTooltip(
@@ -50,10 +56,13 @@ tableBody.each((i: number, row: HTMLElement) => {
         (res: RMPResponse) => {
           const numFound = res.numFound;
           const docs: RMPTeacherData[] = res.docs;
+          const error: Error | undefined = res.error;
 
           if (numFound != 0) {
             const html = createTooltipHTML(docs);
             instance.setContent(html);
+          } else if (error) {
+            instance.setContent(createTooltipErrorHTML());
           } else {
             instance.setContent(createTooltipNoResultsHTML());
           }

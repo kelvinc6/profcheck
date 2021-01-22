@@ -8,7 +8,7 @@ const RMP_ADD_TEACHER_URL: string =
 const RMP_QUERY_BASE_URL: string =
   "https://solr-aws-elb-production.ratemyprofessors.com/solr/rmp/select/?spellcheck=false&wt=json&qf=teacherfirstname_t+teacherlastname_t&fl=pk_id+teacherfirstname_t+teacherlastname_t+total_number_of_ratings_i+averageratingscore_rf+schoolid_s+teacherdepartment_s+schoolname_s&mm=2";
 
-export enum SchoolId {
+enum SchoolId {
   UBC = 1413,
   UBC_OKANAGAN = 5436,
   UofT = 12184,
@@ -22,5 +22,6 @@ export {
   FUZZY_CONST_UOFT,
   RMP_ADD_TEACHER_URL,
   RMP_TEACHER_BASE_URL,
-  RMP_QUERY_BASE_URL
+  RMP_QUERY_BASE_URL,
+  SchoolId,
 };

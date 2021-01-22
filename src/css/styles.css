@@ -10,6 +10,5 @@
 
 .tippy-box[data-theme~="custom"] {
   background-color: hsla(215, 25%, 20%, 0.96);
-  color: hsla(0, 0%, 98%, 0.95
-  );
+  color: hsla(0, 0%, 98%, 0.95);
 }
