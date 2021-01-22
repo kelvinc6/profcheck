@@ -1,3 +1,4 @@
+var $ = require("jquery");
 import { createNameSpan, createTooltip, createTooltipHTML } from "./helpers";
 import { SchoolId } from "./constants";
 import { RMPTeacherData, RMPResponse } from "./d";

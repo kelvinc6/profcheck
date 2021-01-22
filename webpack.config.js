@@ -3,9 +3,9 @@ const CopyPlugin = require("copy-webpack-plugin");
 
 module.exports = {
   entry: {
-    background: "./src/background.ts",
-    content_ubc: "./src/content_ubc.ts",
-    content_uoft: "./src/content_uoft.ts",
+    background: "./src/ts/background.ts",
+    content_ubc: "./src/ts/content_ubc.ts",
+    content_uoft: "./src/ts/content_uoft.ts",
   },
   module: {
     rules: [
@@ -25,7 +25,10 @@ module.exports = {
   },
   plugins: [
     new CopyPlugin({
-      patterns: [{ from: "./src/manifest.json"}],
+      patterns: [
+        { from: "./src/manifest.json" },
+        { from: "./src/img/icon128.png" },
+      ],
     }),
   ],
   output: {

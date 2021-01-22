@@ -1,11 +1,13 @@
-import tippy from 'tippy.js';
-import 'tippy.js/dist/tippy.css';
+import tippy from "tippy.js";
+import "tippy.js/dist/tippy.css";
+import "tippy.js/animations/shift-toward-subtle.css";
 
-import {RMP_TEACHER_BASE_URL} from './constants'
-import {RMPTeacherData} from './d'
+import { RMP_TEACHER_BASE_URL } from "./constants";
+import { RMPTeacherData } from "./d";
+var $ = require('jquery')
 
 function createNameSpan(rowIndex: number, nameIndex: number, name: string) {
-  return jQuery.parseHTML(
+  return $.parseHTML(
     `<span id="instructor_row${rowIndex}_name${nameIndex}">${name}</span></br>`
   );
 }
@@ -16,6 +18,7 @@ function createTooltip(selector: string, text: string) {
     allowHTML: true,
     interactive: true,
     placement: "right",
+    animation: "shift-toward-subtle",
   });
 }
 
@@ -43,8 +46,4 @@ function createTooltipHTML(teachers: RMPTeacherData[]) {
   return html;
 }
 
-export {
-  createNameSpan,
-  createTooltip,
-  createTooltipHTML,
-}
+export { createNameSpan, createTooltip, createTooltipHTML };
