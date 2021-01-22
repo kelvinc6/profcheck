@@ -11,10 +11,16 @@
     {
       "matches": ["https://courses.students.ubc.ca/cs/*"],
       "js": ["content_ubc.js"]
+    },
+    {
+      "matches": [
+        "https://coursefinder.utoronto.ca/course-search/search/courseInquiry?methodToCall=start&viewId=CourseDetails-InquiryView&courseId=*"
+      ],
+      "js": ["content_uoft.js"]
     }
   ],
   "permissions": ["https://*.ratemyprofessors.com/*", "alarms", "storage"],
   "icons": {
-
+    "128": "icon128.png"
   }
 }
