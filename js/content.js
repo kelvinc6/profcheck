@@ -66,7 +66,7 @@ nameTable.each((i, elem) => {
        * Rate My Professor's rating out of 5
        * @type {number}
        */
-      const rating = result.averageRatingScore;
+      const rating = result.avgRatingScore;
 
       /**
        * Link to the professor's Rate My Professor's page

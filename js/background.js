@@ -1,7 +1,6 @@
 /**
  * Represents degree of fuzziness used in the search query
- * @constant
- * @type {number} 
+ * @constant {number}
  */
 const FUZZY_CONST = 0.6;
 
@@ -45,7 +44,7 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
  * The formatted result of a search to RMP's database
  * @typedef {Object} RMPData
  * @property {boolean} isSuccessful - Whether the query was sucessful in returning a result
- * @property {number} averageRatingScore - Rating out of 5
+ * @property {number} avgRatingScore - Rating out of 5
  * @property {number} numRatings - Number of ratings
  * @property {string} link - Link to RMP page
  */
@@ -59,10 +58,8 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
  */
 async function getFormattedInstructorInfo(instructorName, isUBCO, typos) {
   instructorName = typoCheck(instructorName, typos);
-
   const url = queryConstructor(instructorName, isUBCO);
-
-  let responseJson = await fetch(url).then((res) => res.json());
+  const responseJson = await fetch(url).then((res) => res.json());
 
   //We always take the first result
   if (responseJson.response.numFound != 0) {
@@ -70,14 +67,14 @@ async function getFormattedInstructorInfo(instructorName, isUBCO, typos) {
     const PROF_LINK = `https://www.ratemyprofessors.com/ShowRatings.jsp?tid=${professorData.pk_id}`;
     return {
       isSuccessful: true,
-      averageRatingScore: professorData.averageratingscore_rf,
+      avgRatingScore: professorData.averageratingscore_rf,
       numRatings: professorData.total_number_of_ratings_i,
       link: PROF_LINK,
     };
   } else {
     return {
       isSuccessful: false,
-      averageRatingScore: null,
+      avgRatingScore: null,
       numRatings: null,
       link: "https://www.ratemyprofessors.com/AddTeacher.jsp",
     };
