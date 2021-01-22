@@ -22,13 +22,13 @@ https://chrome.google.com/webstore/detail/profcheck/iejcdmcgelpioejdpeoifnaemnei
 This project now uses Typescript and webpack. Clone this repository and install the required dependencies:
 
 ```shell
-npm install
+$ npm install
 ```
 
 Then compile with webpack:
 
 ```shell
-npm run build
+$ npm run build
 ```
 
 The compiled extension will be in the _dist_ folder.
