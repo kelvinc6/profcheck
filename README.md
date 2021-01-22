@@ -14,4 +14,4 @@ https://chrome.google.com/webstore/detail/profcheck/iejcdmcgelpioejdpeoifnaemnei
 
 ### CAPS 301:
 
-![example](https://i.imgur.com/kY8BcXM.png)
+![example](https://i.imgur.com/Isn1RfE.png)
