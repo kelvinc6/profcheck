@@ -7,9 +7,6 @@ const typos = {
     "EVANS, WILLIAM": "EVANS, WILL"
 }
 
-const formatInstructorNames = string => {
-    return string.replace("(Coordinator)", "")
-}
 
 // const instructorRow = $("table[class=\\table] > tbody > tr > td")
 // let instructorName = formatInstructorNames(instructorRow.eq(1).text())
@@ -35,11 +32,10 @@ table.each((i, elem) => {
     const isTA = $(elem).has('td:contains("TA")').length ? true : false
     let instructorName = $(elem).find("a").text()
 
-    if (typos.hasOwnProperty(instructorName)) {
-        instructorName = typos[instructorName]
-    }
+    // if (typos.hasOwnProperty(instructorName)) {
+    //     instructorName = typos[instructorName]
+    // }
 
-    console.log(instructorName);
     //Break out of loop upon reaching a TA
     if (isTA || searched.includes(instructorName) || !instructorName) { return false }
 
@@ -68,7 +64,6 @@ table.each((i, elem) => {
             $(`#numRatings${i}`).hide()
             $(`#link${i}`).hide()
             
-
             //Indicate instructor could not be found
             $(`#rating${i}`).text("Error")
         }
