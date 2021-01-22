@@ -51,5 +51,7 @@ function createTooltip(selector: string, text: string): void {
   //@ts-ignore
   tippy(selector, {
     content: text,
+    allowHTML: true,
+    interactive: true
   });
 }

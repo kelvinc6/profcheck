@@ -13,7 +13,6 @@ tableBody.each((i: number, row: HTMLElement) => {
   namesArray.pop();
 
   const instructorColumn: JQuery = $(row).find(`div[id^='u263_line']`).parent();
-
   instructorColumn.after(getRatingRowSpot(i), getLinkRowSpot(i));
 
   namesArray.forEach((name, k) => {
@@ -46,10 +45,12 @@ tableBody.each((i: number, row: HTMLElement) => {
         (res: RMPResponse) => {
           const success: boolean = res.success;
           const numFound = res.numFound;
+          const docs: RMPTeacherData[] = res.docs;
           const firstProf: RMPTeacherData = res.docs[0];
 
           if (!!firstProf) {
-            const firstProfLink: string = RMP_TEACHER_BASE_URL + firstProf.pk_id;
+            const firstProfLink: string =
+              RMP_TEACHER_BASE_URL + firstProf.pk_id;
 
             //Set the rating and link
             rating.text(
@@ -61,10 +62,20 @@ tableBody.each((i: number, row: HTMLElement) => {
 
             //Show a warning tooltip if more than one result was found
             if (numFound > 1) {
-              createTooltip(
-                `a[id^='link_row${i}_name${k}']`,
-                `${numFound} matches were found. Link may be incorrect.`
-              );
+              let html = "";
+              docs.forEach((teacher) => {
+                const firstName = teacher.teacherfirstname_t;
+                const lastName = teacher.teacherlastname_t;
+                const rating = teacher.averageratingscore_rf;
+                const linkHTML = `<a style="color:DodgerBlue;" href="${
+                  RMP_TEACHER_BASE_URL + teacher.pk_id
+                }" target="_blank">Link</a>`;
+                html = html.concat(
+                  `${firstName} ${lastName} with ${rating} ${linkHTML}</br>`
+                );
+              });
+
+              createTooltip(`a[id^='link_row${i}_name${k}']`, html);
             }
 
             link.show();

@@ -38,10 +38,3 @@ enum SchoolId {
   UofT_MISSISSAUGA = 4928,
   UofT_SCARBOROUGH = 4919
 }
-
-enum School {
-  UBC,
-  UofT
-}
-
-
