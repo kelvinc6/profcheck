@@ -1,6 +1,8 @@
 // const instructorRow = $("table[class=\\table] > tbody > tr > td")
 // let instructorName = formatInstructorNames(instructorRow.eq(1).text())
 
+console.log('Dev Branch');
+
 //The table with class "table" has instrucors and TA names
 const table = $('table[class=\\table] > tbody').children()
 
