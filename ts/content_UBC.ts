@@ -1,7 +1,5 @@
 const nameTable: JQuery = $("table[class=\\table] > tbody").children();
 
-let searchedNames: string[] = [];
-
 nameTable.each((i: number, row: HTMLElement) => {
   const isTA: boolean = $(row).children().first().text().includes("TA:");
   const name: string = $(row)
@@ -11,11 +9,6 @@ nameTable.each((i: number, row: HTMLElement) => {
 
   if (isTA || !name) {
     return false;
-  }
-  if (searchedNames.includes(name) || !name) {
-    return;
-  } else {
-    searchedNames.push(name);
   }
 
   $(row).find("a").attr("id", `name${i}`);
