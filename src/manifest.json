@@ -1,11 +1,10 @@
 {
-  "manifest_version": 2,
+  "manifest_version": 3,
   "name": "ProfCheck",
   "description": "View Rate My Professors ratings directly in course browsers!",
-  "version": "1.2.4",
+  "version": "1.2.5",
   "background": {
-    "scripts": ["background.js"],
-    "persistent": false
+    "service_worker": "background.js"
   },
   "content_scripts": [
     {
@@ -19,7 +18,8 @@
       "js": ["content_uoft.js"]
     }
   ],
-  "permissions": ["https://*.ratemyprofessors.com/*", "alarms", "storage"],
+  "permissions": ["alarms", "storage"],
+  "host_permissions": ["https://*.ratemyprofessors.com/*"],
   "icons": {
     "128": "icon128.png"
   }

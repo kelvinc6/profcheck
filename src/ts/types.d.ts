@@ -1,10 +1,11 @@
-import { SchoolId } from "./constants";
+import { SchoolId, School } from "./constants";
 
 /**
  * Content script request
  */
 interface RMPRequest {
   name: string;
+  school: School;
   schoolIds: SchoolId[];
 }
 

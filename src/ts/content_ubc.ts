@@ -1,5 +1,5 @@
 import { createTippyInstance, tooltipHandleResponse } from "./helpers";
-import { SchoolId } from "./constants";
+import { School, SchoolId } from "./constants";
 import { RMPResponse } from "./types";
 import "../css/styles.css";
 import $ from "jquery";
@@ -24,7 +24,7 @@ nameTable.each((i: number, row: HTMLElement) => {
   const instance = createTippyInstance(`a#name${i}`, "Loading...")[0];
 
   chrome.runtime.sendMessage(
-    { schoolIds: [getSchoolId()], name },
+    { name, school: School.UBC, schoolIds: [getSchoolId()] },
     (res: RMPResponse) => {
       tooltipHandleResponse(res, instance);
     }

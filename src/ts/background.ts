@@ -1,10 +1,10 @@
-import { SchoolId } from "./constants";
+import { School, SchoolId, TYPOS_URL } from "./constants";
 import {
   FUZZY_CONST_UBC,
   FUZZY_CONST_UOFT,
   RMP_QUERY_BASE_URL,
 } from "./constants";
-import { Typos, RMPResponse } from "./types";
+import { Typos, RMPResponse, RMPRequest } from "./types";
 
 /**
  * Create a typo update alarm on installation
@@ -20,14 +20,19 @@ chrome.runtime.onInstalled.addListener(() => {
 /**
  * Create listener for content script message
  */
-chrome.runtime.onMessage.addListener(function (req, sender, sendResponse) {
+chrome.runtime.onMessage.addListener(function (
+  req: RMPRequest,
+  sender,
+  sendResponse
+) {
   const schoolIds: SchoolId[] = req.schoolIds;
+  const school: School = req.school;
   let name: string = req.name;
 
   chrome.storage.local.get("typos", (storage) => {
     const typos: Typos = storage.typos;
     name = typoCheck(name, typos);
-    const query: string = queryConstructor(schoolIds[0], name);
+    const query: string = queryConstructor(school, name);
     const url: string = urlConstructor(query, schoolIds);
     getRMPResponse(url).then((res) => sendResponse(res));
   });
@@ -67,19 +72,15 @@ async function getRMPResponse(url: string): Promise<RMPResponse> {
  * @param school -
  * @param name
  */
-function queryConstructor(school: SchoolId, name: string): string {
+function queryConstructor(school: School, name: string): string {
   switch (school) {
-    case SchoolId.UBC_OKANAGAN:
-    case SchoolId.UBC:
+    case School.UBC:
       name = splitName(name).toString();
       return name
         .replace(/,/g, `~${FUZZY_CONST_UBC}%20`)
         .concat(`~${FUZZY_CONST_UBC}`)
         .toLowerCase();
-    case SchoolId.UofT:
-    case SchoolId.UofT_ST_GEORGE:
-    case SchoolId.UofT_MISSISSAUGA:
-    case SchoolId.UofT_SCARBOROUGH:
+    case School.UofT:
       return (
         "teacherfirstname_t:" +
         name
@@ -125,7 +126,7 @@ function typoCheck(name: string, typos: Typos): string {
  * Updates the typos.json file in Chrome's local storage from remote GitHub repository
  */
 function updateTypos(): void {
-  fetch("https://insidiousdata.github.io/data/typos.json")
+  fetch(TYPOS_URL)
     .then((res) => res.json())
     .then((typos) => {
       chrome.storage.local.set({ typos }, function () {
