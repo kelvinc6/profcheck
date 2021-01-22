@@ -1,6 +1,7 @@
 const typos = {
   "BROWN, LINDSAY": "ROGERS, LINDSAY",
   "O'NEILL, ANGELA": "O'NEILL, ANGIE",
+  "EVANS, WILLIAM": "EVANS, WILL"
 };
 
 //The table with class "table" has instrucors and TA names
