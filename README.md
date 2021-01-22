@@ -15,8 +15,8 @@ https://chrome.google.com/webstore/detail/profcheck/iejcdmcgelpioejdpeoifnaemnei
 ### Manual
 
 1. Clone this repository
-1. Enable *Developer Mode* in Chrome Extensions page
-2. Click *Load Unpacked*, and select the cloned repository
+1. Enable *Developer Mode* on Chrome Extensions page
+2. Click *Load Unpacked* and select the cloned repository
 
 ## Example
 
