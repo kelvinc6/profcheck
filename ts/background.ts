@@ -1,6 +1,3 @@
-const FUZZY_CONST_UBC = 0.6;
-const FUZZY_CONST_UOFT = 0.8;
-
 chrome.runtime.onInstalled.addListener(function () {
   updateTypos();
   chrome.alarms.create("updateTypos", {
@@ -11,94 +8,63 @@ chrome.runtime.onInstalled.addListener(function () {
 chrome.alarms.onAlarm.addListener(() => updateTypos());
 
 chrome.runtime.onMessage.addListener(function (req, sender, sendResponse) {
-  const school = req.school;
-  const instructorName = req.instructorName;
-  const isUBCO = req.isUBCO;
+  const schoolIds: SchoolId[] = req.schoolIds;
+  let name = req.name;
 
-  switch (school) {
-    case "UBC":
-      //Get stored typos for checking, then call getInfo
-      chrome.storage.local.get("typos", (storage) =>
-        getFormattedInstructorInfo(
-          school,
-          instructorName,
-          isUBCO,
-          storage.typos
-        ).then((res) => sendResponse(res))
-      );
-      return true;
-    case "UofT":
-      getFormattedInstructorInfo(
-        school,
-        instructorName,
-        false,
-        {}
-      ).then((res) => sendResponse(res));
-      return true;
-  }
+  chrome.storage.local.get("typos", (storage) => {
+    const typos: Typos = storage.typos;
+    name = typoCheck(name, typos);
+    const query: string = queryConstructor(schoolIds[0], name);
+    const url: string = urlConstructor(query, schoolIds);
+
+    getRMPResponse(url).then((res) => sendResponse(res));
+  });
+  return true;
 });
 
-interface RMPData {
-  success: boolean;
-  numFound: number;
-  avgRatingScore: number;
-  numRatings: number;
-  link: string;
-}
-
-interface Typos {
-  [key: string]: string;
-}
-
-async function getFormattedInstructorInfo(
-  school: string,
-  instructorName: string,
-  isUBCO: boolean,
-  typos: Typos
-): Promise<RMPData> {
-  instructorName = typoCheck(school, instructorName, typos);
-
-  const url: string = urlConstructor(school, instructorName, isUBCO);
-  const json = await fetch(url)
+async function getRMPResponse(url: string): Promise<RMPResponse> {
+  return fetch(url)
     .then((res) => res.json())
-    .catch((err) => {});
-
-  if (json.response.numFound != 0) {
-    const professorData = json.response.docs[0];
-    const PROF_LINK = `https://www.ratemyprofessors.com/ShowRatings.jsp?tid=${professorData.pk_id}`;
-    return {
-      success: true,
-      numFound: json.response.numFound,
-      avgRatingScore: professorData.averageratingscore_rf,
-      numRatings: professorData.total_number_of_ratings_i,
-      link: PROF_LINK,
-    };
-  } else {
-    return {
-      success: false,
-      numFound: json.response.numFound,
-      avgRatingScore: 0,
-      numRatings: 0,
-      link: "https://www.ratemyprofessors.com/AddTeacher.jsp",
-    };
-  }
+    .then(
+      (json): RMPResponse => {
+        return {
+          success: true,
+          ...json.response,
+        };
+      }
+    )
+    .catch(
+      (err): RMPResponse => {
+        return {
+          success: false,
+          error: err,
+          numFound: 0,
+          start: 0,
+          docs: [],
+        };
+      }
+    );
 }
 
 /**
  * Creates an Apache Solr search query depending on school
  */
-function queryConstructor(school: string, instructorName: string) {
+function queryConstructor(school: SchoolId, name: string) {
   switch (school) {
-    case "UBC":
-      instructorName = splitName(instructorName).toString();
-      return instructorName
+    case SchoolId.UBC_OKANAGAN:
+    case SchoolId.UBC:
+      name = splitName(name).toString();
+      return name
         .replace(/,/g, `~${FUZZY_CONST_UBC}%20`)
         .concat(`~${FUZZY_CONST_UBC}`)
         .toLowerCase();
-    case "UofT":
+    case SchoolId.UofT:
+    case SchoolId.UofT_ST_GEORGE:
+    case SchoolId.UofT_MISSISSAUGA:
+    case SchoolId.UofT_SCARBOROUGH:
       return (
         "teacherfirstname_t:" +
-        instructorName
+        name
           .trim()
           .toLowerCase()
           .replace(" ", "*%20AND%20teacherlastname_t:")
@@ -108,37 +74,22 @@ function queryConstructor(school: string, instructorName: string) {
 }
 
 /**
- * Returns name array of a name with hyphenated names split and appended to the array
+ * Creates a Solr search URL to Rate My Professor's database
+ * @param query - search query
+ * @param schoolid - array of school ids' to search
+ * @param mm - Solr minimum should match
  */
-function splitName(instructorName: string): string[] {
-  var nameArray = instructorName.split(/[\s,]+/);
-  nameArray.forEach((name) => {
-    if (name.includes("-")) {
-      const hyphenSplitArray = name.split("-");
-      nameArray = nameArray.concat(hyphenSplitArray);
+function urlConstructor(query: string, schoolIdArray: SchoolId[], mm?: number) {
+  let schoolIdFilterQuery: string = "";
+  schoolIdArray.forEach((schoolId, i) => {
+    schoolIdFilterQuery = schoolIdFilterQuery.concat(schoolId.toString());
+    if (i < schoolIdArray.length - 1) {
+      schoolIdFilterQuery = schoolIdFilterQuery.concat("%20OR%20");
     }
   });
-  return nameArray;
-}
-
-function urlConstructor(
-  school: string,
-  instructorName: string,
-  isUBCO: boolean
-): string {
-  switch (school) {
-    case "UBC":
-      var query = queryConstructor(school, instructorName);
-      const schoolID = isUBCO ? "5436" : "1413";
-      const databaseURL = `https://solr-aws-elb-production.ratemyprofessors.com/solr/rmp/select/?spellcheck=false&fq=schoolid_s:${schoolID}&wt=json&qf=teacherfirstname_t+teacherlastname_t&fl=pk_id+teacherfirstname_t+teacherlastname_t+total_number_of_ratings_i+averageratingscore_rf&q=${query}&mm=2`;
-      return databaseURL;
-    case "UofT":
-      var query = queryConstructor(school, instructorName);
-      const url = `https://solr-aws-elb-production.ratemyprofessors.com/solr/rmp/select/?spellcheck=false&fq=schoolid_s:1484%20OR%20schoolid_s:4928%20OR%20schoolid_s:4919%20OR%20schoolid_s:12184&wt=json&fl=pk_id+teacherfirstname_t+teacherlastname_t+total_number_of_ratings_i+averageratingscore_rf&q=${query}`;
-      return url;
-    default:
-      return "";
-  }
+  return `https://solr-aws-elb-production.ratemyprofessors.com/solr/rmp/select/?spellcheck=false&fq=schoolid_s:(${schoolIdFilterQuery})&wt=json&qf=teacherfirstname_t+teacherlastname_t&fl=pk_id+teacherfirstname_t+teacherlastname_t+total_number_of_ratings_i+averageratingscore_rf+schoolid_s${
+    mm ? `&mm=${mm}` : ""
+  }&q=${query}`;
 }
 
 /**
@@ -146,14 +97,8 @@ function urlConstructor(
  * incorrect spelling and the correct spelling, and returns the correct
  * spelling if found
  */
-function typoCheck(
-  school: string,
-  instructorName: string,
-  typos: Typos
-): string {
-  return typos.hasOwnProperty(instructorName)
-    ? typos[instructorName]
-    : instructorName;
+function typoCheck(name: string, typos: Typos): string {
+  return typos.hasOwnProperty(name) ? typos[name] : name;
 }
 
 /**
@@ -172,4 +117,18 @@ function updateTypos() {
         console.log("Could not update typos!");
       })
     );
+}
+
+/**
+ * Returns name array of a name with hyphenated names split and appended to the array
+ */
+function splitName(instructorName: string): string[] {
+  var nameArray = instructorName.split(/[\s,]+/);
+  nameArray.forEach((name) => {
+    if (name.includes("-")) {
+      const hyphenSplitArray = name.split("-");
+      nameArray = nameArray.concat(hyphenSplitArray);
+    }
+  });
+  return nameArray;
 }

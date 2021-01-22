@@ -1,7 +1,7 @@
 const tableBody: JQuery = $("tbody[role=alert]").children();
 const instructorColumnHeader: JQuery = $("span#u202_c3_span").parent();
 
-instructorColumnHeader.after(getRatingColumnHeader(),getLinkColumnHeader());
+instructorColumnHeader.after(getRatingColumnHeader(), getLinkColumnHeader());
 
 //Iterate through each row of table
 tableBody.each((i: number, row: HTMLElement) => {
@@ -14,7 +14,7 @@ tableBody.each((i: number, row: HTMLElement) => {
 
   const instructorColumn: JQuery = $(row).find(`div[id^='u263_line']`).parent();
 
-  instructorColumn.after(getRatingRowSpot(i),getLinkRowSpot(i));
+  instructorColumn.after(getRatingRowSpot(i), getLinkRowSpot(i));
 
   namesArray.forEach((name, k) => {
     //Closure is used to preserve name index k for use in sendMessage callback
@@ -34,30 +34,43 @@ tableBody.each((i: number, row: HTMLElement) => {
       link.hide();
 
       chrome.runtime.sendMessage(
-        { school: "UofT", instructorName: name },
-        (res: RMPData) => {
-          const isSuccessful = res.success;
-          const avgRatingScore = res.avgRatingScore;
+        {
+          schoolIds: [
+            SchoolId.UofT,
+            SchoolId.UofT_MISSISSAUGA,
+            SchoolId.UofT_SCARBOROUGH,
+            SchoolId.UofT_ST_GEORGE,
+          ],
+          name,
+        },
+        (res: RMPResponse) => {
+          const success: boolean = res.success;
           const numFound = res.numFound;
-          const linkURL = res.link;
+          const firstProf: RMPTeacherData = res.docs[0];
 
-          if (isSuccessful) {
+          if (!!firstProf) {
+            const firstProfLink: string = RMP_TEACHER_BASE_URL + firstProf.pk_id;
+
             //Set the rating and link
-            rating.text(avgRatingScore ? avgRatingScore : "N/A");
-            link.text("Link").attr("href", linkURL);
+            rating.text(
+              firstProf.averageratingscore_rf
+                ? firstProf.averageratingscore_rf
+                : "N/A"
+            );
+            link.text("Link").attr("href", firstProfLink);
 
             //Show a warning tooltip if more than one result was found
             if (numFound > 1) {
               createTooltip(
                 `a[id^='link_row${i}_name${k}']`,
-                `${res.numFound} matches were found. Link may be incorrect.`
+                `${numFound} matches were found. Link may be incorrect.`
               );
             }
 
             link.show();
           } else {
             rating.text("N/A");
-            link.text("Add").attr("href", res.link);
+            link.text("Add").attr("href", RMP_ADD_TEACHER_URL);
             link.show();
           }
         }
