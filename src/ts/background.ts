@@ -90,7 +90,7 @@ function urlConstructor(query: string, schoolIdArray: SchoolId[]) {
       schoolIdFilterQuery = schoolIdFilterQuery.concat("%20OR%20");
     }
   });
-  return `https://solr-aws-elb-production.ratemyprofessors.com/solr/rmp/select/?spellcheck=false&fq=schoolid_s:(${schoolIdFilterQuery})&wt=json&qf=teacherfirstname_t+teacherlastname_t&fl=pk_id+teacherfirstname_t+teacherlastname_t+total_number_of_ratings_i+averageratingscore_rf+schoolid_s+teacherdepartment_s&mm=2&q=${query}`;
+  return `https://solr-aws-elb-production.ratemyprofessors.com/solr/rmp/select/?spellcheck=false&fq=schoolid_s:(${schoolIdFilterQuery})&wt=json&qf=teacherfirstname_t+teacherlastname_t&fl=pk_id+teacherfirstname_t+teacherlastname_t+total_number_of_ratings_i+averageratingscore_rf+schoolid_s+teacherdepartment_s+schoolname_s&mm=2&q=${query}`;
 }
 
 /**

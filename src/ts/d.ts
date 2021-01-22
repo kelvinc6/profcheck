@@ -16,6 +16,7 @@ interface RMPResponse {
 interface RMPTeacherData {
   averageratingscore_rf: number;
   pk_id: number;
+  schoolname_s: string,
   teacherdepartment_s: string;
   total_number_of_ratings_i: number;
   schoolid_s: string;

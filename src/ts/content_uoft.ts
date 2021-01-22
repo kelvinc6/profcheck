@@ -1,6 +1,11 @@
 var $ = require("jquery");
-import { createNameSpan, createTooltip, createTooltipHTML } from "./helpers";
-import { SchoolId } from "./constants";
+import {
+  createNameSpan,
+  createTooltip,
+  createTooltipHTML,
+  createTooltipNoResultsHTML,
+} from "./helpers";
+import { RMP_ADD_TEACHER_URL, SchoolId } from "./constants";
 import { RMPTeacherData, RMPResponse } from "./d";
 import "../css/tooltip_break.css";
 
@@ -45,7 +50,7 @@ tableBody.each((i: number, row: HTMLElement) => {
             const html = createTooltipHTML(docs);
             instance.setContent(html);
           } else {
-            instance.setContent(`No Rate My Professor's Pages Found :(`);
+            instance.setContent(createTooltipNoResultsHTML());
           }
         }
       );

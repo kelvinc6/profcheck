@@ -1,8 +1,13 @@
 var $ = require("jquery");
-import { createTooltip, createTooltipHTML } from "./helpers";
+import {
+  createTooltip,
+  createTooltipHTML,
+  createTooltipNoResultsHTML,
+} from "./helpers";
 import { SchoolId } from "./constants";
 import { RMPResponse, RMPTeacherData } from "./d";
 import "../css/tooltip_break.css";
+import { create } from "domain";
 
 const nameTable: JQuery = $("table[class=\\table] > tbody").children();
 
@@ -33,7 +38,7 @@ nameTable.each((i: number, row: HTMLElement) => {
         instance.setContent(html);
       } else {
         //@ts-ignore
-        instance.setContent(`No Rate My Professors Pages Found :(`);
+        instance.setContent(createTooltipNoResultsHTML());
       }
     }
   );
