@@ -2,7 +2,7 @@
 chrome.runtime.onInstalled.addListener(function () {
   updateTypos();
   chrome.alarms.create("updateTypos", {
-    periodInMinutes: 30,
+    periodInMinutes: 720,
   });
 });
 
