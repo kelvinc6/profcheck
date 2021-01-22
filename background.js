@@ -8,11 +8,14 @@ chrome.runtime.onMessage.addListener(
 
 async function getInfo(instructorName) {
   const queryURL = queryConstructor(instructorName)
-  const backupQueryURL = backupQueryConstructor(instructorName)
+  const fuzzyQueryURL = fuzzyQueryConstructor(instructorName)
+
+  console.log(queryURL);
 
   let json = await fetch(queryURL).then(res => res.json())
 
-  if (json.response.numFound == 1) {
+  //Possible duplicate entries in database
+  if (json.response.numFound != 0) {
     const professorData = json.response.docs[0]
     const link = `https://www.ratemyprofessors.com/ShowRatings.jsp?tid=${professorData.pk_id}`
     return {
@@ -22,13 +25,9 @@ async function getInfo(instructorName) {
       link: link
     }
   } else {
-    json = await fetch(backupQueryURL).then(res => res.json())
-
-    if (json.response.numFound == 1) {
       const professorData = json.response.docs[0]
       const link = `https://www.ratemyprofessors.com/ShowRatings.jsp?tid=${professorData.pk_id}`
       return {
-        isSuccessful: true,
         averageRatingScore: professorData.averageratingscore_rf,
         numRatings: professorData.total_number_of_ratings_i,
         link: link
@@ -42,8 +41,6 @@ return {
   numRatings: null,
   link: null
 }
-}
-
 
 
 function getAndFormatFirstNameArray(instructorName) {
@@ -67,7 +64,7 @@ function getAndFormatLastNameArray(instructorName) {
 }
 
 function queryConstructor(instructorName) {
-
+  
   const firstNameArray = getAndFormatFirstNameArray(instructorName)
   const lastNameArray = getAndFormatLastNameArray(instructorName)
   let queryBegin = `https://solr-aws-elb-production.ratemyprofessors.com/solr/rmp/select/?wt=json&q=schoolid_s%3A1413+AND+(`
@@ -90,7 +87,8 @@ function queryConstructor(instructorName) {
   return queryBegin
 }
 
-function backupQueryConstructor(instructorName) {
+function fuzzyQueryConstructor(instructorName) {
+
   const firstNameArray = getAndFormatFirstNameArray(instructorName)
   const lastNameArray = getAndFormatLastNameArray(instructorName)
 

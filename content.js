@@ -1,7 +1,10 @@
 // const instructorRow = $("table[class=\\table] > tbody > tr > td")
 // let instructorName = formatInstructorNames(instructorRow.eq(1).text())
 
-console.log('Dev Branch');
+const typos = {
+    'BROWN, LINDSAY': 'ROGERS, LINDSAY'
+}
+
 
 //The table with class "table" has instrucors and TA names
 const table = $('table[class=\\table] > tbody').children()
@@ -31,19 +34,23 @@ table.each((i, elem) => {
     //Continue if instructor has been seen before, or if no name present
     if (searched.includes(instructorName) || !instructorName) {
         return
+    } else {
+        //Keep track of instructors iterated over
+        searched.push(instructorName)
     }
-
-    //Keep track of instructors iterated over
-    searched.push(instructorName)
 
     //Loading indicator
     $(`#rating${i}`).text("Loading...")
+
+    if (typos.hasOwnProperty(instructorName)) {
+        instructorName = typos[instructorName]
+    }
 
     chrome.runtime.sendMessage({ instructorName: instructorName }, function (result) {
         const isSuccessful = result.isSuccessful
         const rating = result.averageRatingScore
         const link = result.link
-        const numRatings= result.numRatings
+        const numRatings = result.numRatings
 
         if (isSuccessful) {
             //Hide loading indicator
@@ -60,4 +67,3 @@ table.each((i, elem) => {
 
 })
 
-  
