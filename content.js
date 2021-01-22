@@ -1,5 +1,3 @@
-const t0 = performance.now()
-
 const typos = {
     'BROWN, LINDSAY': 'ROGERS, LINDSAY',
     'O\'NEILL, ANGELA': 'O\'NEILL, ANGIE'
@@ -46,7 +44,7 @@ table.each((i, elem) => {
         instructorName = typos[instructorName]
     }
 
-    chrome.runtime.sendMessage({instructorName: instructorName }, function (result) {
+    chrome.runtime.sendMessage({isUBCO: isUBCO(), instructorName: instructorName }, function (result) {
         const isSuccessful = result.isSuccessful
         const rating = result.averageRatingScore
         const link = result.link
@@ -68,9 +66,6 @@ table.each((i, elem) => {
 
 })
 
-function loadListings(result) {
-    
+function isUBCO() {
+    return $('.ubc7-campus').attr('id') === 'ubc7-okanagan-campus'
 }
-
-
-console.log(performance.now() - t0)

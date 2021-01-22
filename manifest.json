@@ -1,17 +1,17 @@
 {
   "manifest_version": 2,
-  "name": "ProfessorCheck",
+  "name": "ProfCheck",
   "version": "1.0",
   "background": {
     "scripts": ["jquery-3.5.1.slim.min.js", "background.js"]
   },
   "content_scripts": [
     {
-      "matches": ["<all_urls>"],
+      "matches": ["https://courses.students.ubc.ca/cs/*"],
       "js": ["jquery-3.5.1.slim.min.js", "content.js"]
     }
   ],
   "permissions": [
-    "<all_urls>"
+    "https://solr-aws-elb-production.ratemyprofessors.com/*"
   ]
 }
