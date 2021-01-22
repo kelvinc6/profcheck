@@ -1,8 +1,8 @@
-// const instructorRow = $("table[class=\\table] > tbody > tr > td")
-// let instructorName = formatInstructorNames(instructorRow.eq(1).text())
+const t0 = performance.now()
 
 const typos = {
-    'BROWN, LINDSAY': 'ROGERS, LINDSAY'
+    'BROWN, LINDSAY': 'ROGERS, LINDSAY',
+    'O\'NEILL, ANGELA': 'O\'NEILL, ANGIE'
 }
 
 //The table with class "table" has instrucors and TA names
@@ -12,7 +12,7 @@ const table = $('table[class=\\table] > tbody').children()
 table.each((i, elem) => {
     const ratingElement = `<td style="min-width:10em" id="rating${i}"></td>`
     const numRatingsElement = `<td style="min-width:10em" id="numRatings${i}"></td>`
-    const linkElement = `<td style="min-width:10em"><a id="link${i}" target="_blank"></a></td>`
+    const linkElement = `<td style="min-width:10em"><a href="#" id="link${i}" target="_blank"></a></td>`
 
     $(elem).append(ratingElement + numRatingsElement + linkElement)
 })
@@ -41,11 +41,12 @@ table.each((i, elem) => {
     //Loading indicator
     $(`#rating${i}`).text("Loading...")
 
+    //Typo check
     if (typos.hasOwnProperty(instructorName)) {
         instructorName = typos[instructorName]
     }
 
-    chrome.runtime.sendMessage({ instructorName: instructorName }, function (result) {
+    chrome.runtime.sendMessage({instructorName: instructorName }, function (result) {
         const isSuccessful = result.isSuccessful
         const rating = result.averageRatingScore
         const link = result.link
@@ -57,12 +58,19 @@ table.each((i, elem) => {
 
             $(`#rating${i}`).text(rating ? `Rating: ${rating} / 5` : 'N/A')
             $(`#numRatings${i}`).text(`(${numRatings} ratings)`)
-            $(`#link${i}`).attr("href", link).text(`RMP Page`)
+            $(`#link${i}`).text(`RMP Page`).attr("href", link)
         } else {
             //Indicate instructor could not be found
-            $(`#rating${i}`).text("No RMP Page")
+            $(`#rating${i}`).text("No RMP Page Found")
+            $(`#link${i}`).text('Add Listing').attr('href', 'https://www.ratemyprofessors.com/AddTeacher.jsp')
         }
     })
 
 })
 
+function loadListings(result) {
+    
+}
+
+
+console.log(performance.now() - t0)

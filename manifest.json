@@ -1,14 +1,17 @@
 {
   "manifest_version": 2,
-  "name": "UBC Rate My Professors",
-  "version": "0.1",
+  "name": "ProfessorCheck",
+  "version": "1.0",
   "background": {
-    "scripts": ["jquery-3.5.1.js", "background.js"]
+    "scripts": ["jquery-3.5.1.slim.min.js", "background.js"]
   },
   "content_scripts": [
     {
       "matches": ["<all_urls>"],
-      "js": ["jquery-3.5.1.js", "content.js"]
+      "js": ["jquery-3.5.1.slim.min.js", "content.js"]
     }
+  ],
+  "permissions": [
+    "<all_urls>"
   ]
 }
