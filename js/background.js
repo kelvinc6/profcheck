@@ -97,7 +97,7 @@ function queryConstructor(instructorName, isUBCO, isFuzzy = false) {
 
 async function typoCheck(instructorName) {
   const typos = await fetch(
-    "https://raw.githubusercontent.com/InsidiousData/InsidiousData.github.io/master/data/typos.json"
+    "https://insidiousdata.github.io/data/typos.json"
   )
     .then((res) => res.json())
     .catch((err) => {});
