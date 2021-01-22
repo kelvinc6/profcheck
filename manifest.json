@@ -16,7 +16,6 @@
       "matches": [
         "https://coursefinder.utoronto.ca/course-search/search/courseInquiry?methodToCall=start&viewId=CourseDetails-InquiryView&courseId=*"
       ],
-      "css": ["css/css_UOFT.css"],
       "js": [
         "js/lib/jquery-3.5.1.slim.min.js",
         "js/lib/popper.min.js",

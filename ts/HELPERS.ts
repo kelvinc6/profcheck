@@ -1,49 +1,6 @@
-function getRatingColumnHeader() {
-  return jQuery.parseHTML(`<th scope="col" colspan="1" rowspan="1" class="infoline sorting_disabled" role="columnheader" tabindex="0" style="width: 40px">
-    <span class="infoline">
-      <label id="ratingHeader" for="">Rating</label>
-    </span>
-    </th>`);
-}
-
-function getLinkColumnHeader() {
-  return jQuery.parseHTML(`<th scope="col"colspan="1" rowspan="1" class="infoline sorting_disabled" role="columnheader" tabindex="0" style="width: 40px">
-    <span class="infoline">
-      <label id="linkHeader" for="">RMP Page</label>
-    </span>
-    </th>`);
-}
-
-function getRatingRowSpot(rowIndex: number) {
-  return jQuery.parseHTML(`<td colspan="1" rowspan="1" class="uif-field">
-    <div id="ratings_row${rowIndex}" class="uif-field">
-    </div>
-  </td>`);
-}
-
-function getLinkRowSpot(rowIndex: number) {
+function createNameSpan(rowIndex: number, nameIndex: number, name: string) {
   return jQuery.parseHTML(
-    `<td colspan="1" rowspan="1" class="uif-field">
-<div id="links_row${rowIndex}" class="uif-field">
-</div>
-</td>`
-  );
-}
-
-function getRating(rowIndex: number, nameIndex: number, text?: string) {
-  return jQuery.parseHTML(
-    `<span id="rating_row${rowIndex}_name${nameIndex}">${text}</span><br>`
-  );
-}
-
-function getLink(
-  rowIndex: number,
-  nameIndex: number,
-  text?: string,
-  link?: string
-) {
-  return jQuery.parseHTML(
-    `<a id="link_row${rowIndex}_name${nameIndex}" href="${link}" target="_blank">${text}</a><br>`
+    `<span id="instructor_row${rowIndex}_name${nameIndex}">${name}</span></br>`
   );
 }
 
@@ -52,6 +9,29 @@ function createTooltip(selector: string, text: string): void {
   tippy(selector, {
     content: text,
     allowHTML: true,
-    interactive: true
+    interactive: true,
+    placement: "right",
   });
+}
+
+function createTooltipEntriesHTML(teachers: RMPTeacherData[]) {
+  let html = "";
+  teachers.forEach((teacher, j) => {
+    const firstName = teacher.teacherfirstname_t;
+    const lastName = teacher.teacherlastname_t;
+    const department = teacher.teacherdepartment_s;
+    const rating = teacher.averageratingscore_rf;
+    const linkHTML = `<a style="color:DeepSkyBlue;" href="${
+      RMP_TEACHER_BASE_URL + teacher.pk_id
+    }" target="_blank">RMP Page</a>`;
+    html = html.concat(
+      
+      `${firstName} ${lastName} </br> Department: ${department} </br> Rating: ${rating} </br> ${linkHTML}`
+    );
+
+    if (j < teachers.length - 1) {
+      html = html.concat("<hr>");
+    }
+  });
+  return html
 }
