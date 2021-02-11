@@ -33,7 +33,10 @@ chrome.runtime.onMessage.addListener(function (
     const typos: Typos = storage.typos;
     name = typoCheck(name, typos);
     const query: string = queryConstructor(school, name);
-    const url: string = urlConstructor(query, schoolIds);
+    const url: URL = urlConstructor(query, schoolIds);
+
+    console.log(url.toString())
+
     getRMPResponse(url).then((res) => sendResponse(res));
   });
   return true;
@@ -43,8 +46,8 @@ chrome.runtime.onMessage.addListener(function (
  * Get response JSON from RMP query url
  * @param url - query url
  */
-async function getRMPResponse(url: string): Promise<RMPResponse> {
-  return fetch(url)
+async function getRMPResponse(url: URL): Promise<RMPResponse> {
+  return fetch(url.toString())
     .then((res) => res.json())
     .then(
       (json): RMPResponse => {
@@ -98,7 +101,7 @@ function queryConstructor(school: School, name: string): string {
  * @param schoolid - array of school ids to search
  * @param mm - Solr minimum should match
  */
-function urlConstructor(query: string, schoolIdArray: SchoolId[]): string {
+function urlConstructor(query: string, schoolIdArray: SchoolId[]): URL {
   let schoolIdFilterQuery: string = "";
   schoolIdArray.forEach((schoolId, i) => {
     schoolIdFilterQuery = schoolIdFilterQuery.concat(schoolId.toString());
@@ -106,9 +109,12 @@ function urlConstructor(query: string, schoolIdArray: SchoolId[]): string {
       schoolIdFilterQuery = schoolIdFilterQuery.concat("%20OR%20");
     }
   });
-  return (
-    RMP_QUERY_BASE_URL + `&fq=schoolid_s:(${schoolIdFilterQuery})&q=${query}`
+  RMP_QUERY_BASE_URL.searchParams.set(
+    "fq",
+    `schoolid_s:(${schoolIdFilterQuery})`
   );
+  RMP_QUERY_BASE_URL.searchParams.set("q", query);
+  return RMP_QUERY_BASE_URL;
 }
 
 /**
