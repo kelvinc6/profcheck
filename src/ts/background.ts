@@ -41,7 +41,7 @@ chrome.runtime.onMessage.addListener(function (
 
 /**
  * Get response JSON from RMP query url
- * @param url - query url
+ * @param {URL} url - query URL object
  */
 async function getRMPResponse(url: URL): Promise<RMPResponse> {
   return fetch(url.toString())
@@ -69,8 +69,8 @@ async function getRMPResponse(url: URL): Promise<RMPResponse> {
 
 /**
  * Create an Apache Solr query depending on school
- * @param school -
- * @param name
+ * @param {School} school
+ * @param {string} name
  */
 function queryConstructor(school: School, name: string): string {
   switch (school) {
@@ -94,9 +94,8 @@ function queryConstructor(school: School, name: string): string {
 
 /**
  * Creates a Solr search URL to Rate My Professor's database
- * @param query - search query
- * @param schoolid - array of school ids to search
- * @param mm - Solr minimum should match
+ * @param {string} query - search query
+ * @param {SchoolId[]} schoolid - array of school ids to search
  */
 function urlConstructor(query: string, schoolIdArray: SchoolId[]): URL {
   let schoolIdFilterQuery: string = "";
@@ -118,8 +117,8 @@ function urlConstructor(query: string, schoolIdArray: SchoolId[]): URL {
  * Check's a name against an set of key-value pairs consisting of an
  * incorrect spelling and the correct spelling, and returns the correct
  * spelling if found
- * @param name
- * @param typos
+ * @param {string} name
+ * @param {Typos} typos
  */
 function typoCheck(name: string, typos: Typos): string {
   return typos.hasOwnProperty(name) ? typos[name] : name;
@@ -145,7 +144,7 @@ function updateTypos(): void {
 
 /**
  * Returns name array of a name with hyphenated names split and appended to the array
- * @param instructorName
+ * @param {string} instructorName
  */
 function splitName(instructorName: string): string[] {
   var nameArray = instructorName.split(/[\s,]+/);

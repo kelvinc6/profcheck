@@ -9,9 +9,9 @@ import $ from "jquery";
 
 /**
  * Creates a span element with a name. Used for substituting plain text names on UofT's course explorer
- * @param rowIndex
- * @param nameIndex - index of name within a row (multiple names can appear in a row)
- * @param name
+ * @param {number} rowIndex
+ * @param {number} nameIndex - index of name within a row (multiple names can appear in a row)
+ * @param {string} name
  */
 function createNameSpan(
   rowIndex: number,
@@ -25,8 +25,8 @@ function createNameSpan(
 
 /**
  * Create a Tippy tooltip on the selected element
- * @param selector
- * @param html
+ * @param {string} selector
+ * @param {string} html
  */
 function createTippyInstance(selector: string, html: string): Instance[] {
   return tippy(selector, {
@@ -43,7 +43,7 @@ function createTippyInstance(selector: string, html: string): Instance[] {
 
 /**
  * Combines all Tippy instances using the singleton pattern
- * @param tippys
+ * @param {Instance[]} tippys
  * @deprecated
  */
 function createTippySingleton(tippys: Instance[]) {
@@ -64,7 +64,7 @@ function createTippySingleton(tippys: Instance[]) {
 
 /**
  * Create tooltip HTML from array of teacher data
- * @param teachers
+ * @param {RMPTeacherData[]} teachers
  */
 function createTooltipHTML(teachers: RMPTeacherData[]): string {
   let html = "";
@@ -115,8 +115,8 @@ function createTooltipErrorHTML(): string {
 
 /**
  * Sets the content of a Tippy depending on response
- * @param res - RMPResponse from query
- * @param instance - Tippy instance
+ * @param {RMPResponse} res - RMPResponse from query
+ * @param {Instance} instance - Tippy instance
  */
 function tooltipHandleResponse(res: RMPResponse, instance: Instance): void {
   const numFound = res.numFound;
