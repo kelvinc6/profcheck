@@ -33,4 +33,4 @@ $ npm run build
 
 The compiled extension will be in the _dist_ folder.
 
-Enable _Developer Mode_ on Chrome Extensions page and click _Load Unpacked_ and select _dist_.
+Enable _Developer Mode_ on Chrome Extensions page and click _Load Unpacked_ and select the _dist_ folder.
