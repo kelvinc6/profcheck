@@ -34,9 +34,6 @@ chrome.runtime.onMessage.addListener(function (
     name = typoCheck(name, typos);
     const query: string = queryConstructor(school, name);
     const url: URL = urlConstructor(query, schoolIds);
-
-    console.log(url.toString())
-
     getRMPResponse(url).then((res) => sendResponse(res));
   });
   return true;
@@ -80,7 +77,7 @@ function queryConstructor(school: School, name: string): string {
     case School.UBC:
       name = splitName(name).toString();
       return name
-        .replace(/,/g, `~${FUZZY_CONST_UBC}%20`)
+        .replace(/,/g, `~${FUZZY_CONST_UBC} `)
         .concat(`~${FUZZY_CONST_UBC}`)
         .toLowerCase();
     case School.UofT:
@@ -89,7 +86,7 @@ function queryConstructor(school: School, name: string): string {
         name
           .trim()
           .toLowerCase()
-          .replace(" ", "*%20AND%20teacherlastname_t:")
+          .replace(" ", "* AND teacherlastname_t:")
           .concat(`~${FUZZY_CONST_UOFT}`)
       );
   }
@@ -106,7 +103,7 @@ function urlConstructor(query: string, schoolIdArray: SchoolId[]): URL {
   schoolIdArray.forEach((schoolId, i) => {
     schoolIdFilterQuery = schoolIdFilterQuery.concat(schoolId.toString());
     if (i < schoolIdArray.length - 1) {
-      schoolIdFilterQuery = schoolIdFilterQuery.concat("%20OR%20");
+      schoolIdFilterQuery = schoolIdFilterQuery.concat(" OR ");
     }
   });
   RMP_QUERY_BASE_URL.searchParams.set(
