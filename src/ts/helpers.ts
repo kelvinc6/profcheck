@@ -83,7 +83,7 @@ function createTooltipHTML(teachers: RMPTeacherData[]): string {
 
     html = html.concat(
       `<div><span><a id="tooltiplink" href="${RMP_TEACHER_BASE_URL}" target="_blank"><b>${firstName} ${lastName}</b></a></span></br><span>School: ${school}</span></br><span>Department: ${department}</span></br><span>Rating: ${
-        rating ? `${rating} / 5 (${numRatings} ratings)` : "N/A"
+        rating ? `${rating} / 5 (${numRatings} ratings)` : `N/A (${numRatings} ratings)`
       } </span></br><span>Difficulty: ${
         difficulty ? `${difficulty} / 5` : "N/A"
       }</span>`
