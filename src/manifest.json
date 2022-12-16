@@ -19,7 +19,7 @@
     }
   ],
   "permissions": [],
-  "host_permissions": ["https://ratemyprofessors.com/*"],
+  "host_permissions": ["https://*.ratemyprofessors.com/*"],
   "icons": {
     "128": "icon128.png"
   }
