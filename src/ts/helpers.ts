@@ -4,7 +4,7 @@ import "../css/styles.css";
 import "tippy.js/animations/shift-toward-subtle.css";
 
 import { RMP_TEACHER_BASE_URL, RMP_ADD_TEACHER_URL } from "./constants";
-import { RMPResponse, RMPTeacherData } from "./types";
+import { RMPResponse, ITeacherPage } from "./types";
 import $ from "jquery";
 
 /**
@@ -64,37 +64,37 @@ function createTippySingleton(tippys: Instance[]) {
 
 /**
  * Create tooltip HTML from array of teacher data
- * @param {RMPTeacherData[]} teachers
+ * @param {ITeacherPage[]} teachers
  */
-function createTooltipHTML(teachers: RMPTeacherData[]): string {
+function createTooltipHTML(teachers: ITeacherPage[]): string {
   let html = "";
-  teachers.forEach((teacher, j) => {
+  teachers.forEach((teacher: ITeacherPage, j) => {
     const {
-      teacherfirstname_t: firstName,
-      teacherlastname_t: lastName,
-      schoolname_s: school,
-      teacherdepartment_s: department,
-      averageratingscore_rf: rating,
-      total_number_of_ratings_i: numRatings,
-      averageeasyscore_rf: difficulty,
+      firstName,
+      lastName,
+      school,
+      department,
+      avgRating,
+      numRatings,
+      avgDifficulty,
+      legacyId,
     } = teacher;
 
-    RMP_TEACHER_BASE_URL.searchParams.set("tid", teacher.pk_id.toString());
+    console.log(teacher);
+
+    RMP_TEACHER_BASE_URL.searchParams.set("tid", legacyId.toString());
 
     html = html.concat(
-      `<div><span><a id="tooltiplink" href="${RMP_TEACHER_BASE_URL}" target="_blank"><b>${firstName} ${lastName}</b></a></span></br><span>School: ${school}</span></br><span>Department: ${department}</span></br><span>Rating: ${
-        rating ? `${rating} / 5 (${numRatings} ratings)` : `N/A (${numRatings} ratings)`
+      `<div><span><a id="tooltiplink" href="${RMP_TEACHER_BASE_URL}" target="_blank"><b>${firstName} ${lastName}</b></a></span></br><span>School: ${school.name}</span></br><span>Department: ${department}</span></br><span>Rating: ${
+        avgRating != -1 ? `${avgRating} / 5 (${numRatings} ratings)` : `N/A (${numRatings} ratings)`
       } </span></br><span>Difficulty: ${
-        difficulty ? `${difficulty} / 5` : "N/A"
+        avgDifficulty != -1 ? `${avgDifficulty} / 5` : "N/A"
       }</span>`
     );
 
     if (j < teachers.length - 1) {
       html = html.concat(`<hr id="tooltipbreak">`);
     }
-    // else {
-    //   html = html.concat(`<hr id="tooltipbreak"><div style="text-align:center; font-size:x-small;"><span>Don't see your prof?</span></br><a style="color:DeepSkyBlue;" href="${RMP_ADD_TEACHER_URL}" target="_blank">Add RMP Page</a></div>`)
-    // }
   });
   return html;
 }
@@ -119,11 +119,11 @@ function createTooltipErrorHTML(): string {
  * @param {Instance} instance - Tippy instance
  */
 function tooltipHandleResponse(res: RMPResponse, instance: Instance): void {
-  const numFound = res.numFound;
-  const docs: RMPTeacherData[] = res.docs;
+  const docs: ITeacherPage[] = res.docs;
   const error: Error | undefined = res.error;
 
-  if (numFound != 0) {
+  if (docs.length != 0) {
+    console.log("Setting content!");
     const html = createTooltipHTML(docs);
     instance.setContent(html);
   } else if (error) {
