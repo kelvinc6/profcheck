@@ -7,7 +7,6 @@ This extension is fast and up-to-date, as it queries the Rate My Professors data
 Supported schools:
 
 - University of British Columbia (Vancouver & Okanagan)
-- University of Toronto (St. George, Mississauga, & Scarborough)
 
 Built with [Tippy.js](https://atomiks.github.io/tippyjs/)
 
