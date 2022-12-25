@@ -71,7 +71,7 @@ function createTooltipHTML(teachers: ITeacherFromSearch[]): string {
   let html = '<div class="scroll">';
 
   if (!teachers.length) {
-    html = html.concat(`<span>No Rate My Professors Pages Found :(</span></br><span>Perhaps the teacher's last name is misspelled.</span></div>`);
+    html = html.concat(`<span>No Rate My Professors page found.</span></div>`);
     return html;
   }
 
@@ -96,7 +96,7 @@ function createTooltipHTML(teachers: ITeacherFromSearch[]): string {
       <hr id="tooltipbreak">`
     );
   });
-  html = html.concat("<span>Don't see your teacher's page?</span></br><span>Perhaps the teacher's last name is misspelled.</span></div>");
+  // html = html.concat("<span>Don't see your teacher's page?</span></br><span>Perhaps the teacher's last name is misspelled.</span></div>");
   return html;
 }
 /**
