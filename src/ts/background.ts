@@ -18,7 +18,6 @@ chrome.runtime.onMessage.addListener(function (
 });
 
 async function searchTeacher(name: string, schoolID: string): Promise<ITeacherFromSearch[]> {
-
   const client = new GraphQLClient(RMP_QUERY_BASE_URL.toString(), {
     headers: {
       authorization: `Basic ${AUTH_TOKEN}`

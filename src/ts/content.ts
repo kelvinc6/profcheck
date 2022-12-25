@@ -92,11 +92,12 @@ function createTooltipHTML(teachers: ITeacherFromSearch[]): string {
       `<span><a id="tooltiplink" href="${RMP_TEACHER_BASE_URL}" target="_blank"><b>${firstName} ${lastName}</b></a></span></br>
       <span>Department: ${department}</span></br>
       <span>Rating: ${avgRating != -1 ? `${avgRating} / 5 (${numRatings} ratings)` : `N/A (${numRatings} ratings)`} </span></br>
-      <span>Difficulty: ${avgDifficulty != -1 ? `${avgDifficulty} / 5` : "N/A"}</span>
-      <hr id="tooltipbreak">`
+      <span>Difficulty: ${avgDifficulty != -1 ? `${avgDifficulty} / 5` : "N/A"}</span>`
     );
+
+    if (j < teachers.length-1) html = html.concat(`<hr id="tooltipbreak">`);
   });
-  // html = html.concat("<span>Don't see your teacher's page?</span></br><span>Perhaps the teacher's last name is misspelled.</span></div>");
+  html = html.concat(`</div>`);
   return html;
 }
 /**
