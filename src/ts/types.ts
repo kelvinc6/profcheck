@@ -1,12 +1,11 @@
-import { SchoolId, School } from "./constants";
+import { SchoolId } from "./constants";
 
 /**
  * Content script request
  */
 export interface RMPRequest {
   name: string;
-  school: School;
-  schoolIds: SchoolId[];
+  schoolId: SchoolId;
 }
 
 /**
@@ -18,7 +17,7 @@ export interface RMPResponse {
   docs: Array<ITeacherPage>;
 }
 
-export interface ISchoolFromSearch {
+interface ISchoolFromSearch {
   id: string;
   name: string;
   city: string;

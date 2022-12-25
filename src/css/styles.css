@@ -38,3 +38,8 @@
 .tippy-box[data-theme~="dark"][data-placement^="right"] > .tippy-arrow::before {
   border-right-color: hsla(215, 15%, 35%, 0.97);
 }
+
+div.scroll {
+  max-height: 30em;
+  overflow-y: auto;
+}

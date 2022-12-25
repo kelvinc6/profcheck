@@ -3,7 +3,7 @@ import "tippy.js/dist/tippy.css";
 import "../css/styles.css";
 import "tippy.js/animations/shift-toward-subtle.css";
 
-import { RMP_TEACHER_BASE_URL, RMP_ADD_TEACHER_URL } from "./constants";
+import { RMP_TEACHER_BASE_URL } from "./constants";
 import { RMPResponse, ITeacherPage } from "./types";
 import $ from "jquery";
 
@@ -67,7 +67,7 @@ function createTippySingleton(tippys: Instance[]) {
  * @param {ITeacherPage[]} teachers
  */
 function createTooltipHTML(teachers: ITeacherPage[]): string {
-  let html = "";
+  let html = '<div class="scroll">';
   teachers.forEach((teacher: ITeacherPage, j) => {
     const {
       firstName,
@@ -80,14 +80,13 @@ function createTooltipHTML(teachers: ITeacherPage[]): string {
       legacyId,
     } = teacher;
 
-    console.log(teacher);
-
     RMP_TEACHER_BASE_URL.searchParams.set("tid", legacyId.toString());
 
     html = html.concat(
-      `<div><span><a id="tooltiplink" href="${RMP_TEACHER_BASE_URL}" target="_blank"><b>${firstName} ${lastName}</b></a></span></br><span>School: ${school.name}</span></br><span>Department: ${department}</span></br><span>Rating: ${
-        avgRating != -1 ? `${avgRating} / 5 (${numRatings} ratings)` : `N/A (${numRatings} ratings)`
-      } </span></br><span>Difficulty: ${
+      `<span><a id="tooltiplink" href="${RMP_TEACHER_BASE_URL}" target="_blank"><b>${firstName} ${lastName}</b></a></span></br>
+      <span>Department: ${department}</span></br>
+      <span>Rating: ${avgRating != -1 ? `${avgRating} / 5 (${numRatings} ratings)` : `N/A (${numRatings} ratings)`} </span></br>
+      <span>Difficulty: ${
         avgDifficulty != -1 ? `${avgDifficulty} / 5` : "N/A"
       }</span>`
     );
@@ -95,6 +94,7 @@ function createTooltipHTML(teachers: ITeacherPage[]): string {
     if (j < teachers.length - 1) {
       html = html.concat(`<hr id="tooltipbreak">`);
     }
+    html.concat("<\div>");
   });
   return html;
 }
@@ -103,7 +103,7 @@ function createTooltipHTML(teachers: ITeacherPage[]): string {
  * Create tooltip HTML when search failed
  */
 function createTooltipNoResultsHTML(): string {
-  return `<span>No Rate My Professors Pages Found :(</span></br><a id="tooltiplink" href="${RMP_ADD_TEACHER_URL}" target="_blank">Add RMP Page</a>`;
+  return `<span>No Rate My Professors Pages Found :(</span></br><span>Perhaps the teacher's last name is misspelled.</span>`;
 }
 
 /**
