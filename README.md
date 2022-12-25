@@ -8,7 +8,7 @@ Supported schools:
 
 - University of British Columbia (Vancouver & Okanagan)
 
-NOTE: Search is performed on the teacher's **last name** as the API does not support fuzzy searching.
+NOTE: Search is performed on the teacher's **last name**.
 
 Built with [Tippy.js](https://atomiks.github.io/tippyjs/)
 
