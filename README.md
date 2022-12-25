@@ -1,12 +1,14 @@
 # ProfCheck
 
-An extension that displays Rate My Professors' information in tooltips for teachers on UBC's course explorer.
+An extension that displays information from Rate My Professors for teachers using tooltips in UBC's course explorer.
 
-This extension is fast and up-to-date, as it queries the Rate My Professors' API.
+This extension is fast and up-to-date, as it uses the Rate My Professors' API.
 
 Supported schools:
 
 - University of British Columbia (Vancouver & Okanagan)
+
+NOTE: Search is performed on the teacher's **last name** as the API does not support fuzzy searching.
 
 Built with [Tippy.js](https://atomiks.github.io/tippyjs/)
 
