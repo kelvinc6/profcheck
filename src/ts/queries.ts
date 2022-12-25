@@ -1,4 +1,4 @@
-import {gql} from 'graphql-request';
+import { gql } from 'graphql-request';
 
 export const searchTeacherQuery = gql`
 query NewSearchTeachersQuery($text: String!, $schoolID: ID!)
@@ -11,10 +11,6 @@ query NewSearchTeachersQuery($text: String!, $schoolID: ID!)
           id
           firstName
           lastName
-          school {
-            name
-            id
-          }
           avgDifficulty
           avgRating
           department
@@ -37,12 +33,6 @@ query TeacherRatingsPageQuery(
       id
       firstName
       lastName
-      school {
-        name
-        id
-        city
-        state
-      }
       avgDifficulty
       avgRating
       department
