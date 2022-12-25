@@ -1,8 +1,8 @@
 # ProfCheck
 
-An extension to find the instructor(s) for a course on a school's course explorer, and displays their rating as well as their Rate My Professors link in a tooltip on hover over.
+An extension that displays Rate My Professors' information in tooltips for teachers on UBC's course explorer.
 
-This extension is fast and up-to-date, as it queries the Rate My Professors database using its GraphQL endpoint.
+This extension is fast and up-to-date, as it queries the Rate My Professors' API.
 
 Supported schools:
 
