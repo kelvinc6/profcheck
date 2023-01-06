@@ -2,7 +2,7 @@
 
 An extension that displays information from Rate My Professors for teachers using tooltips in UBC's course explorer.
 
-This extension is fast and up-to-date, as it uses the Rate My Professors' API.
+This extension uses the Rate My Professors' GraphQL API.
 
 Supported schools:
 
